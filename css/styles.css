@@ -1,0 +1,246 @@
+:root {
+  --color-primario: #ffb894;
+  --color-secundario: #262626;
+  --color-fondo: #fffdfc;
+  --fuente-principal: "futura-pt", sans-serif;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-secundario);
+  line-height: 1.5;
+}
+
+/* === HEADER GENERAL === */
+.main-header {
+  background-color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.main-header h1 {
+  font-size: 1.5rem;
+  color: var(--color-primario);
+  letter-spacing: 1px;
+}
+
+.main-header nav {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.main-header a {
+  text-decoration: none;
+  color: #444;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.main-header a:hover {
+  background-color: #fff0e8;
+}
+
+.main-header a.active {
+  background-color: var(--color-primario);
+  color: white;
+}
+
+/* === HERO DIVIDIDO === */
+.hero-renace {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(to right, #fffdfc 50%, #ffe8dd 50%);
+}
+
+.hero-col {
+  flex: 1;
+  padding: 4rem 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.izquierda {
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero-col.izquierda h2 {
+  font-size: 2.8rem;
+  line-height: 1.2;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.hero-col.izquierda h2 span {
+  color: var(--color-primario);
+  display: block;
+}
+
+.hero-col.izquierda p {
+  font-size: 1.15rem;
+  color: #444;
+  line-height: 1.6;
+  max-width: 500px;
+}
+
+/* === FORMULARIO BUSCADOR === */
+.form-buscador {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input-jugador input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.input-jugador input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 2px rgba(255, 184, 148, 0.3);
+}
+
+.campos {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.campo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 0.5rem;
+  border-bottom: 2px solid #ccc;
+  padding: 0.4rem 0;
+  transition: border-color 0.3s ease;
+}
+
+.campo:focus-within {
+  border-color: var(--color-primario);
+}
+
+.campo span {
+  font-size: 1rem;
+  color: var(--color-primario);
+}
+
+.campo select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.95rem;
+  flex: 1;
+  appearance: none;
+  color: #333;
+  font-family: var(--fuente-principal);
+  padding: 0.2rem 0;
+}
+
+/* === BOTÓN === */
+button {
+  background-color: var(--color-primario);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 32px;
+  cursor: pointer;
+  align-self: center;
+  width: 160px;
+  box-shadow: 0 4px 14px rgba(255, 184, 148, 0.25);
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #f59e6d;
+  transform: translateY(-2px);
+}
+
+/* === ERRORES === */
+.errores {
+  font-size: 0.85rem;
+  color: #c2442b;
+  text-align: center;
+}
+
+/* === SECCIÓN RESERVAS === */
+.seccion-reservas {
+  padding: 3rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.seccion-reservas h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--color-secundario);
+}
+
+#lista-reservas {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#lista-reservas li {
+  background-color: #fffaf5;
+  border-left: 4px solid var(--color-primario);
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 10px rgba(255, 184, 148, 0.1);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+  .hero-renace {
+    flex-direction: column;
+    background: #fffdfc;
+  }
+
+  .hero-col {
+    padding: 2rem;
+  }
+
+  .izquierda {
+    text-align: center;
+    align-items: center;
+  }
+
+  .campos {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+}
