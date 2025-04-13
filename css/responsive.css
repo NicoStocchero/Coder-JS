@@ -1,0 +1,46 @@
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .card-reserva {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1.2rem 1.5rem;
+  }
+
+  .card-reserva p {
+    font-size: 1rem;
+  }
+
+  .card-reserva .btn-cancelar {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .hero-renace {
+    grid-template-columns: 1fr;
+    background: var(--color-fondo);
+  }
+
+  .hero-col {
+    padding: 2rem;
+  }
+
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-header nav {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .contenedor-cards {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+}

@@ -3,23 +3,114 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mis reservas - Renace</title>
+    <title>Mis reservas - RENACE</title>
+
+    <!-- Tipografía Futura -->
     <link rel="stylesheet" href="https://use.typekit.net/zbi3xkg.css" />
-    <link rel="stylesheet" href="../css/styles.css" />
+    <!-- Íconos FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- CSS en orden funcional (subimos un nivel porque estamos en /html) -->
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/layout.css" />
+    <link rel="stylesheet" href="../css/componentes.css" />
+    <link rel="stylesheet" href="../css/modal.css" />
+    <link rel="stylesheet" href="../css/animaciones.css" />
+    <link rel="stylesheet" href="../css/responsive.css" />
+
     <script type="module" src="../js/misreservas.js"></script>
   </head>
   <body>
     <header class="main-header">
-      <h1>Renace Padel Club</h1>
+      <h1>RENACE PADEL CLUB</h1>
       <nav>
         <a href="../index.html">Inicio</a>
         <a href="reservas.html" class="active">Mis reservas</a>
       </nav>
     </header>
 
-    <section class="seccion-reservas">
-      <h2>Reservas realizadas</h2>
-      <ul id="lista-reservas"></ul>
-    </section>
+    <main class="main-reservas">
+      <!-- Encabezado para los gestores del club -->
+      <section class="encabezado-usuario">
+        <h2>
+          <i class="fa-solid fa-chart-line"></i> Gestión de reservas del club
+        </h2>
+        <p class="texto-contexto">
+          Acá podés visualizar los turnos confirmados, cancelar reservas y
+          acceder a estadísticas en tiempo real.
+        </p>
+      </section>
+
+      <!-- Resumen general (solo visual por ahora) -->
+      <section class="resumen-turnos">
+        <div class="resumen-item">
+          <i class="fa-regular fa-calendar-check"></i>
+          <span
+            >Total de reservas: <strong>funcionContarReservas()</strong></span
+          >
+        </div>
+        <div class="resumen-item">
+          <i class="fa-regular fa-clock"></i>
+          <span
+            >Horas totales reservadas:
+            <strong>funcionCalcularHorasTotales()</strong></span
+          >
+        </div>
+        <div class="resumen-item">
+          <i class="fa-solid fa-user-group"></i>
+          <span
+            >Clientes únicos:
+            <strong>funcionContarClientesUnicos()</strong></span
+          >
+        </div>
+      </section>
+
+      <!-- Turnos próximos -->
+      <section class="seccion-reservas">
+        <div class="titulo-contenedor">
+          <h3 class="titulo-seccion">
+            <i class="fa-solid fa-table-tennis-paddle-ball"></i> Turnos próximos
+          </h3>
+        </div>
+        <div id="lista-reservas" class="contenedor-cards"></div>
+      </section>
+
+      <!-- Mensaje en caso de no haber reservas -->
+      <section class="mensaje-vacio" style="display: none">
+        <i class="fa-regular fa-face-smile"></i>
+        <p>
+          No hay reservas activas. Mostrando mensaje generado por
+          <strong>funcionVerificarReservas()</strong>
+        </p>
+      </section>
+
+      <!-- Contacto interno flotante (WhatsApp club) -->
+      <a
+        id="boton-contacto"
+        href="https://wa.me/5493510000000"
+        target="_blank"
+        class="boton-contacto"
+        aria-label="Contacto Renace Padel Club"
+      >
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+    </main>
+
+    <div id="modal-cancelar" class="modal hidden">
+      <div class="modal-contenido">
+        <div id="detalle-cancelar"></div>
+        <div class="botones-accion">
+          <button id="btn-cancelar-confirmar" class="boton-principal">
+            Sí, cancelar turno
+          </button>
+          <button id="btn-cancelar-volver" class="boton-secundario">
+            Volver al listado
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

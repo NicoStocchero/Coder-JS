@@ -3,9 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Renace Padel Club</title>
+    <title>RENACE PADEL CLUB</title>
+
+    <!-- Tipografía Futura -->
     <link rel="stylesheet" href="https://use.typekit.net/zbi3xkg.css" />
-    <link rel="stylesheet" href="css/styles.css" />
+    <!-- Íconos FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- CSS en orden funcional -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/componentes.css" />
+    <link rel="stylesheet" href="css/formulario.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <link rel="stylesheet" href="css/animaciones.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+
     <script type="module" src="js/main.js"></script>
   </head>
   <body>
@@ -19,14 +35,14 @@
 
     <main class="hero-renace">
       <div class="hero-col izquierda">
-        <h2>Reserva tu cancha<br /><span>al instante</span></h2>
+        <h2>Reserva tu turno<br /><span>al instante</span></h2>
         <p>
           Explorá disponibilidad real y gestioná tus turnos de forma simple.
         </p>
       </div>
-
       <div class="hero-col derecha">
         <form id="form-reserva" class="form-buscador">
+          <h3 class="titulo-formulario">¡Agendá tu próximo partido!</h3>
           <div class="input-jugador">
             <input
               type="text"
@@ -38,35 +54,51 @@
             <input
               type="email"
               id="email"
-              placeholder="Correo electrónico"
+              placeholder="Tu email de contacto"
               required
             />
-            <input type="tel" id="telefono" placeholder="Teléfono" required />
+            <input
+              type="tel"
+              id="telefono"
+              placeholder="Número de WhatsApp 📱"
+              required
+            />
           </div>
-
           <div class="campos">
             <div class="campo">
-              <span>📅</span>
-              <select id="fecha"></select>
+              <label for="fecha">📅</label>
+              <select id="fecha" required></select>
             </div>
             <div class="campo">
-              <span>⏰</span>
-              <select id="hora"></select>
+              <label for="hora">⏰</label>
+              <select id="hora" required></select>
             </div>
             <div class="campo">
-              <span>⏳</span>
-              <select id="duracion">
+              <label for="duracion">⏳</label>
+              <select id="duracion" required>
                 <option value="90">90 min</option>
                 <option value="120">120 min</option>
               </select>
             </div>
           </div>
-
-          <div id="previsualizar-reserva" class="previsualizar-reserva"></div>
-          <button type="submit">🔍 Reservar</button>
+          <div class="botones-accion">
+            <button type="submit" class="boton-principal">
+              🔍 Buscar disponibilidad
+            </button>
+          </div>
           <p id="mensajesDeError" class="errores"></p>
         </form>
       </div>
     </main>
+
+    <div id="modal-confirmacion" class="modal hidden">
+      <div class="modal-contenido">
+        <div id="detalle-confirmacion"></div>
+        <div class="botones-accion">
+          <button id="btn-confirmar" class="boton-principal">Confirmar</button>
+          <button id="btn-cancelar" class="boton-secundario">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
