@@ -33,3 +33,12 @@ body {
   font-size: 18px;
   overflow-x: hidden; /* ✅ Previene desbordes horizontales */
 }
+
+/* === CONTENEDOR BASE DE GRILLA GLOBAL === */
+.contenedor-grilla {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}

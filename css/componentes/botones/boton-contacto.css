@@ -1,0 +1,23 @@
+/* === BOTÓN CONTACTO (WHATSAPP) === */
+.boton-contacto {
+  align-items: center;
+  background-color: #25d366;
+  border-radius: 50%;
+  bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  color: white;
+  display: flex;
+  font-size: 1.6rem;
+  height: 56px;
+  justify-content: center;
+  position: fixed;
+  right: 1.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  width: 56px;
+  z-index: 50;
+}
+
+.boton-contacto:hover {
+  background-color: #1ebe5b;
+}

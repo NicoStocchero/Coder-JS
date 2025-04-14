@@ -1,0 +1,32 @@
+/* ======================================
+   RENACE PADEL CLUB - CSS PRINCIPAL
+   ====================================== */
+
+/* === BASE Y LAYOUT === */
+@import url("./base-layout/base.css");
+@import url("./base-layout/layout.css");
+@import url("./base-layout/calendario.css");
+@import url("./base-layout/ejemplos/cards-admin.css");
+@import url("./base-layout/ejemplos/nav.css");
+
+/* === COMPONENTES === */
+
+/* Botones */
+@import url("./componentes/botones/botones.css");
+@import url("./componentes/botones/boton-contacto.css");
+@import url("./componentes/botones/boton-filtro.css");
+
+/* Cards y modales */
+@import url("./componentes/card-reservas.css");
+@import url("./componentes/contenedor-card.css");
+@import url("./componentes/modal.css");
+
+/* === FORMULARIOS === */
+@import url("./formularios/formulario.css");
+@import url("./formularios/dropdown.css");
+
+/* === ANIMACIONES === */
+@import url("./animaciones/animaciones.css");
+
+/* === RESPONSIVE === */
+@import url("./responsive/responsive.css");

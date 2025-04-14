@@ -40,6 +40,8 @@ const horasDisponibles = [
 // Cargar reservas previas si existen
 const reservas = JSON.parse(localStorage.getItem("reservas")) || [];
 
+const jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+
 // Elementos de selección de fecha y hora
 const seleccionarHora = document.getElementById("hora");
 const seleccionarFecha = document.getElementById("fecha");
@@ -56,7 +58,87 @@ const modalConfirmacion = document.getElementById("modal-confirmacion");
 const detalleConfirmacion = document.getElementById("detalle-confirmacion");
 const botonConfirmar = document.getElementById("btn-confirmar");
 const botonCancelar = document.getElementById("btn-cancelar");
+const modalJugador = document.getElementById("modal-jugador");
+const botonConfirmarJugador = document.getElementById("btn-confirmar-jugador");
+const botonCancelarJugador = document.getElementById("btn-cancelar-jugador");
+const detalleJugador = document.getElementById("detalle-jugador");
+
 let reservaPendiente = null;
+
+// Esta función capitaliza el primer carácter de una cadena
+function capitalizar(texto) {
+  return texto
+    .toLowerCase()
+    .split(" ")
+    .map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1))
+    .join(" ");
+}
+
+// Esta función activa el menú lateral y muestra el submenú correspondiente al ícono seleccionado
+function menuLateral() {
+  const iconos = document.querySelectorAll(".nav-item");
+  const todosLosSubmenus = document.querySelectorAll(".submenu");
+  const cajaSubmenus = document.querySelector(".submenus");
+
+  // Al hacer clic en un ícono, mostrar el submenú correspondiente
+  iconos.forEach((icono) => {
+    icono.addEventListener("click", () => {
+      const nombreMenu = icono.dataset.menu;
+
+      todosLosSubmenus.forEach((bloque) => {
+        bloque.style.display = "none";
+      });
+
+      const submenuActual = document.getElementById(`menu-${nombreMenu}`);
+      if (submenuActual) {
+        cajaSubmenus.style.display = "flex";
+        submenuActual.style.display = "flex";
+      }
+    });
+  });
+}
+
+function guardarJugadorDesdeFormulario() {
+  const mensajeError = document.getElementById("mensaje-error-jugador");
+  mensajeError.textContent = "";
+
+  const nombre = capitalizar(document.getElementById("nombre").value.trim());
+  const apellido = capitalizar(
+    document.getElementById("apellido").value.trim()
+  );
+  const email = document.getElementById("email").value.trim();
+  const telefono = document.getElementById("telefono").value.trim();
+
+  const yaExiste = jugadores.some(
+    (jugador) =>
+      jugador.email.toLowerCase() === email.toLowerCase() ||
+      jugador.telefono === telefono
+  );
+
+  if (yaExiste) {
+    mensajeError.textContent = "Ya existe un jugador con ese email o teléfono.";
+    return;
+  }
+
+  const nuevoJugador = {
+    id: Date.now(),
+    nombre,
+    apellido,
+    email,
+    telefono,
+  };
+
+  jugadores.push(nuevoJugador);
+  localStorage.setItem("jugadores", JSON.stringify(jugadores));
+
+  document.getElementById("form-jugador").reset();
+
+  document
+    .querySelector("#dropdown-jugador .dropdown-opciones")
+    .classList.remove("abierto");
+
+  mostrarOpcionesDeJugadores();
+}
 
 // ------------------------------
 // FUNCIONES PARA FECHAS
@@ -67,11 +149,14 @@ let reservaPendiente = null;
 function generarFechasDisponibles() {
   const fechas = [];
   const hoy = new Date();
+
+  // Ciclo for para generar fechas desde hoy hasta 6 días adelante
   for (let i = 0; i < 7; i++) {
     const fecha = new Date(hoy);
     fecha.setDate(hoy.getDate() + i);
     fechas.push(fecha.toISOString().split("T")[0]);
   }
+
   return fechas;
 }
 
@@ -88,25 +173,158 @@ function formatearFecha(fechaISO) {
 // FUNCIONES DE CARGA DE FECHAS Y HORAS
 // ------------------------------
 
-// Esta función carga las fechas disponibles en el select de fechas
-function cargarFechas() {
-  const fechas = generarFechasDisponibles();
-  for (const f of fechas) {
-    const opcion = document.createElement("option");
-    opcion.value = f;
-    opcion.textContent = formatearFecha(f);
-    seleccionarFecha.appendChild(opcion);
-  }
+function mostrarOpcionesDeJugadores() {
+  const lista = document.querySelector("#dropdown-jugador .dropdown-opciones");
+  const boton = document.querySelector("#dropdown-jugador .dropdown-toggle");
+  const campoJugador = document.getElementById("jugador");
+
+  const jugadoresActualizados =
+    JSON.parse(localStorage.getItem("jugadores")) || [];
+
+  lista.innerHTML = "";
+
+  jugadoresActualizados.forEach((jugador) => {
+    const item = document.createElement("li");
+    item.textContent = `${jugador.nombre} ${jugador.apellido}`;
+    item.dataset.valor = jugador.id;
+
+    item.addEventListener("click", () => {
+      campoJugador.value = jugador.id;
+
+      boton.textContent = item.textContent;
+
+      lista.classList.remove("abierto");
+      mostrarPrevisualizacion();
+    });
+
+    lista.appendChild(item);
+  });
+
+  // Este evento SÍ debe quedar
+  boton.addEventListener("click", () => {
+    lista.classList.toggle("abierto");
+  });
 }
 
-// Esta función carga las horas disponibles en el select de horas
-function cargarHoras() {
-  for (const h of horasDisponibles) {
-    const opcion = document.createElement("option");
-    opcion.value = h.hora;
-    opcion.textContent = h.hora;
-    seleccionarHora.appendChild(opcion);
-  }
+// Esta función carga las fechas disponibles en el menú desplegable
+function mostrarOpcionesDeFecha() {
+  const fechas = generarFechasDisponibles();
+  const lista = document.querySelector("#dropdown-fecha .dropdown-opciones");
+  const boton = document.querySelector("#dropdown-fecha .dropdown-toggle");
+  const campoFecha = document.getElementById("fecha");
+
+  lista.innerHTML = ""; // Limpiamos la lista antes de agregar
+
+  fechas.forEach((fechaISO) => {
+    const fechaLegible = formatearFecha(fechaISO);
+    const opcion = document.createElement("li");
+    opcion.textContent = fechaLegible;
+    opcion.dataset.valor = fechaISO;
+
+    // Al hacer clic en una opción, se actualiza el input y se cierra el menú
+    opcion.addEventListener("click", () => {
+      campoFecha.value = fechaISO;
+      boton.textContent = fechaLegible;
+      lista.classList.remove("abierto");
+    });
+
+    lista.appendChild(opcion);
+  });
+
+  boton.addEventListener("click", () => {
+    lista.classList.toggle("abierto");
+  });
+}
+
+// Esta función carga las horas disponibles en el menú desplegable
+function mostrarOpcionesDeHora() {
+  const lista = document.querySelector("#dropdown-hora .dropdown-opciones");
+  const boton = document.querySelector("#dropdown-hora .dropdown-toggle");
+  const campoHora = document.getElementById("hora");
+
+  lista.innerHTML = ""; // Limpiamos antes de cargar
+
+  horasDisponibles.forEach((horaObj) => {
+    const item = document.createElement("li");
+    item.textContent = `${horaObj.hora} hs`;
+    item.dataset.valor = horaObj.hora;
+
+    item.addEventListener("click", () => {
+      campoHora.value = horaObj.hora;
+      boton.textContent = item.textContent;
+      lista.classList.remove("abierto");
+      if (typeof mostrarPrevisualizacion === "function") {
+        mostrarPrevisualizacion();
+      }
+    });
+
+    lista.appendChild(item);
+  });
+
+  boton.addEventListener("click", () => {
+    lista.classList.toggle("abierto");
+  });
+}
+
+// Esta función carga las duraciones disponibles en el menú desplegable
+function mostrarOpcionesDeDuracion() {
+  const duraciones = [
+    { texto: "60 min", valor: "60" },
+    { texto: "90 min", valor: "90" },
+    { texto: "120 min", valor: "120" },
+  ];
+
+  const lista = document.querySelector("#dropdown-duracion .dropdown-opciones");
+  const boton = document.querySelector("#dropdown-duracion .dropdown-toggle");
+  const campoDuracion = document.getElementById("duracion");
+
+  lista.innerHTML = "";
+
+  duraciones.forEach((opcion) => {
+    const item = document.createElement("li");
+    item.textContent = opcion.texto;
+    item.dataset.valor = opcion.valor;
+
+    item.addEventListener("click", () => {
+      campoDuracion.value = opcion.valor;
+      boton.textContent = opcion.texto;
+      lista.classList.remove("abierto");
+      mostrarPrevisualizacion();
+    });
+
+    lista.appendChild(item);
+  });
+
+  boton.addEventListener("click", () => {
+    lista.classList.toggle("abierto");
+  });
+}
+
+// Esta función configura el cierre de los dropdowns al hacer clic fuera de ellos
+function configurarCierreDropdowns() {
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#dropdown-duracion")) {
+      document
+        .querySelector("#dropdown-duracion .dropdown-opciones")
+        ?.classList.remove("abierto");
+    }
+    if (!e.target.closest("#dropdown-fecha")) {
+      document
+        .querySelector("#dropdown-fecha .dropdown-opciones")
+        ?.classList.remove("abierto");
+    }
+    if (!e.target.closest("#dropdown-hora")) {
+      document
+        .querySelector("#dropdown-hora .dropdown-opciones")
+        ?.classList.remove("abierto");
+    }
+    if (!e.target.closest(".sidebar")) {
+      document.querySelector(".submenus").style.display = "none";
+      document.querySelectorAll(".submenu").forEach((bloque) => {
+        bloque.style.display = "none";
+      });
+    }
+  });
 }
 
 // Esta función calcula la hora final de una reserva a partir de la hora de inicio y la duración
@@ -139,6 +357,7 @@ function esTurnoDisponible(fecha, inicio, fin) {
 // FORMULARIO Y PREVISUALIZACIÓN
 // ------------------------------
 
+// Esta función cambió muchas veces, ya que antes previsualizaba el texto en la pantalla. Pero para mejorar la UX, quise implementar un modal luego.
 // Esta función muestra una previsualización de la reserva
 function mostrarPrevisualizacion() {
   const preview = document.getElementById("previsualizar-reserva");
@@ -173,20 +392,33 @@ function activarPrevisualizacion() {
 // ------------------------------
 
 // Esta función crea una tarjeta de reserva
-function crearTarjeta(reserva) {
-  const contenedor = document.getElementById("lista-reservas");
+function crearTarjeta(reserva, index) {
   const tarjeta = document.createElement("div");
   tarjeta.classList.add("card-reserva");
 
   tarjeta.innerHTML = `
-    <p><strong>👤 ${reserva.nombre} ${reserva.apellido}</strong></p>
-    <p>📅 ${formatearFecha(reserva.fecha)}</p>
-    <p>⏰ De ${reserva.hora} a ${reserva.horaFinal} hs</p>
-    <p>⌛ ${reserva.duracion} minutos</p>
-    <p>📧 ${reserva.email}</p>
+    <div class="estado-fecha">
+      <p class="hora-turno"><i class="fas fa-clock"></i> ${reserva.hora} a ${
+    reserva.horaFinal
+  } hs</p>
+      <span class="badge-estado">Confirmada</span>
+    </div>
+    <h4>
+      <i class="fas fa-user"></i> ${reserva.nombre.toUpperCase()} ${reserva.apellido.toUpperCase()}
+    </h4>
+    <p class="fecha-turno">
+      <i class="fas fa-calendar-day"></i> ${formatearFecha(reserva.fecha)}
+    </p>
+    <p>
+      <i class="fas fa-hourglass-half"></i> ${reserva.duracion} minutos
+    </p>
+    <p>
+      <i class="fas fa-envelope"></i> ${reserva.email}
+    </p>
+    <button class="btn-cancelar" data-index="${index}">Cancelar</button>
   `;
 
-  contenedor.appendChild(tarjeta);
+  return tarjeta;
 }
 
 // Esta funcion carga las reservas y las ordena por fecha y hora
@@ -207,11 +439,17 @@ function cargarReservas() {
 
 // Esta función obtiene los datos del formulario y los devuelve como un objeto
 function obtenerDatos() {
+  const jugadorId = document.getElementById("jugador").value;
+
+  const jugadoresActualizados =
+    JSON.parse(localStorage.getItem("jugadores")) || [];
+  const jugador = jugadoresActualizados.find((j) => j.id == jugadorId);
+
   return {
-    nombre: nombre.value,
-    apellido: apellido.value,
-    email: email.value,
-    telefono: telefono.value,
+    nombre: jugador?.nombre || "",
+    apellido: jugador?.apellido || "",
+    email: jugador?.email || "",
+    telefono: jugador?.telefono || "",
     fecha: seleccionarFecha.value,
     hora: seleccionarHora.value,
     duracion: parseInt(seleccionarDuracion.value),
@@ -222,7 +460,8 @@ function obtenerDatos() {
 function validarDatos({ nombre, apellido, email, telefono }) {
   if (nombre.length < 2) return "Nombre muy corto.";
   if (apellido.length < 2) return "Apellido muy corto.";
-  if (!/\S+@\S+\.\S+/.test(email)) return "Email no válido.";
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!regexEmail.test(email)) return "Email no válido.";
   if (!/^\d{10}$/.test(telefono)) return "Teléfono no válido.";
   return null;
 }
@@ -242,24 +481,36 @@ function guardarReserva(reserva) {
 
   const contenedor = document.getElementById("lista-reservas");
   if (contenedor) {
-    crearTarjeta(reserva);
+    const nuevaTarjeta = crearTarjeta(reserva, reservas.length - 1);
+    contenedor.appendChild(nuevaTarjeta);
   }
 }
 
+// Funcion con mucha ayuda de IA.
 // Esta función muestra el modal de confirmación y activa los botones de confirmar y cancelar
 function mostrarModalConfirmacion(reserva) {
   reservaPendiente = reserva;
 
   detalleConfirmacion.innerHTML = `
-    <p>¿Querés confirmar la reserva?</p>
-    <p>📅 ${formatearFecha(reserva.fecha)}</p>
-    <p>⏰ De ${reserva.hora} a ${reserva.horaFinal} hs</p>
-    <p>⌛ ${reserva.duracion} minutos</p>
-  `;
+  <p><i class="fas fa-question-circle"></i> ¿Querés confirmar la reserva?</p>
+  <p><i class="fas fa-user"></i> ${reserva.nombre} ${
+    reserva.apellido
+  }</p> <!-- ✅ agregado -->
+  <p><i class="fas fa-calendar-day"></i> ${formatearFecha(reserva.fecha)}</p>
+  <p><i class="fas fa-clock"></i> De ${reserva.hora} a ${
+    reserva.horaFinal
+  } hs</p>
+  <p><i class="fas fa-hourglass-half"></i> ${reserva.duracion} minutos</p>
+`;
 
   modalConfirmacion.classList.remove("hidden");
 
-  botonConfirmar.addEventListener("click", () => {
+  // Misma solucion que la IA. No se que hace cloneNode, pero me lo arregló.
+  const nuevoBotonConfirmar = botonConfirmar.cloneNode(true);
+  const nuevoBotonCancelar = botonCancelar.cloneNode(true);
+  botonConfirmar.parentNode.replaceChild(nuevoBotonConfirmar, botonConfirmar);
+  botonCancelar.parentNode.replaceChild(nuevoBotonCancelar, botonCancelar);
+  nuevoBotonConfirmar.addEventListener("click", () => {
     if (reservaPendiente) {
       guardarReserva(reservaPendiente);
       document.getElementById("form-reserva").reset();
@@ -268,9 +519,46 @@ function mostrarModalConfirmacion(reserva) {
     }
   });
 
-  botonCancelar.addEventListener("click", () => {
+  nuevoBotonCancelar.addEventListener("click", () => {
     modalConfirmacion.classList.add("hidden");
     reservaPendiente = null;
+  });
+}
+function mostrarModalJugadorConfirmacion(jugador) {
+  detalleJugador.innerHTML = `
+    <p><i class="fas fa-question-circle"></i> ¿Querés agregar este jugador?</p>
+    <p><i class="fas fa-user"></i> ${jugador.nombre} ${jugador.apellido}</p>
+    <p><i class="fas fa-envelope"></i> ${jugador.email}</p>
+    <p><i class="fas fa-phone"></i> ${jugador.telefono}</p>
+  `;
+
+  modalJugador.classList.remove("hidden");
+
+  // 🚫 Estas constantes no se pueden volver a usar con el mismo nombre, así que usamos nuevos
+  const nuevoBtnConfirmarJugador = botonConfirmarJugador.cloneNode(true);
+  const nuevoBtnCancelarJugador = botonCancelarJugador.cloneNode(true);
+
+  // Reemplazamos en el DOM
+  botonConfirmarJugador.parentNode.replaceChild(
+    nuevoBtnConfirmarJugador,
+    botonConfirmarJugador
+  );
+  botonCancelarJugador.parentNode.replaceChild(
+    nuevoBtnCancelarJugador,
+    botonCancelarJugador
+  );
+
+  // Listeners NUEVOS
+  nuevoBtnConfirmarJugador.addEventListener("click", () => {
+    jugadores.push(jugador);
+    localStorage.setItem("jugadores", JSON.stringify(jugadores));
+    document.getElementById("form-jugador").reset();
+    mostrarOpcionesDeJugadores();
+    modalJugador.classList.add("hidden");
+  });
+
+  nuevoBtnCancelarJugador.addEventListener("click", () => {
+    modalJugador.classList.add("hidden");
   });
 }
 
@@ -279,32 +567,59 @@ function mostrarModalConfirmacion(reserva) {
 // ------------------------------
 
 // Esta función prepara el formulario para que al enviarlo se validen los datos y se guarde la reserva
-function prepararFormulario() {
+function prepararFormularioReserva() {
   const form = document.getElementById("form-reserva");
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const datos = obtenerDatos();
+      const mensajeError = document.getElementById("mensajesDeError");
+      mensajeError.textContent = "";
 
-    const error = document.getElementById("mensajesDeError");
-    error.innerHTML = "";
+      const mensaje = validarDatos(datos);
+      if (mensaje) {
+        mensajeError.textContent = mensaje;
+        return;
+      }
 
-    const datos = obtenerDatos();
-    const mensaje = validarDatos(datos);
+      const reserva = crearReserva(datos);
+      if (!reserva) {
+        mensajeError.textContent = "Turno no disponible.";
+        return;
+      }
 
-    if (mensaje) {
-      error.textContent = mensaje;
-      return;
-    }
+      mostrarModalConfirmacion(reserva);
+    });
+  }
+}
 
-    const reserva = crearReserva(datos);
+function prepararFormularioJugador() {
+  const form = document.getElementById("form-jugador");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-    if (!reserva) {
-      error.textContent = "El turno no está disponible.";
-      return;
-    }
+      const datos = {
+        nombre: capitalizar(nombre.value.trim()),
+        apellido: capitalizar(apellido.value.trim()),
+        email: email.value.trim(),
+        telefono: telefono.value.trim(),
+      };
 
-    mostrarModalConfirmacion(reserva);
-    form.reset();
-  });
+      const mensajeError = document.getElementById("mensaje-error-jugador");
+      mensajeError.textContent = "";
+
+      const mensaje = validarDatos(datos);
+      if (mensaje) {
+        mensajeError.textContent = mensaje;
+        return;
+      }
+
+      // Reutilizamos la misma lógica: agregamos ID y mandamos al modal
+      const nuevoJugador = { ...datos, id: Date.now() };
+      mostrarModalJugadorConfirmacion(nuevoJugador);
+    });
+  }
 }
 
 // Esta función permite eliminar una reserva
@@ -314,7 +629,7 @@ function eliminarReserva(index) {
 }
 
 // ------------------------------
-// INICIAR
+// INICIAR TODO
 // ------------------------------
 
 // Esta función se ejecuta al cargar la página y llama a las funciones necesarias para inicializar la página
@@ -322,17 +637,22 @@ function iniciarFuncionesDeReserva() {
   const formularioReserva = document.getElementById("form-reserva");
 
   if (formularioReserva) {
-    cargarFechas();
-    cargarHoras();
+    menuLateral();
+    mostrarOpcionesDeJugadores();
+    mostrarOpcionesDeFecha();
+    mostrarOpcionesDeHora();
+    mostrarOpcionesDeDuracion();
+    configurarCierreDropdowns();
     activarPrevisualizacion();
-    prepararFormulario();
+    prepararFormularioJugador();
+    prepararFormularioReserva();
   }
 }
 
 document.addEventListener("DOMContentLoaded", iniciarFuncionesDeReserva);
 
 // ------------------------------
-// EXPORTAR (si se usa en otro archivo)
+// EXPORTAR FUNCIONES
 // ------------------------------
 
 export {

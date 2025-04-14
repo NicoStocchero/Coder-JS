@@ -12,16 +12,9 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="../css/main.css" />
 
-    <!-- CSS en orden funcional (subimos un nivel porque estamos en /html) -->
-    <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" href="../css/layout.css" />
-    <link rel="stylesheet" href="../css/componentes.css" />
-    <link rel="stylesheet" href="../css/modal.css" />
-    <link rel="stylesheet" href="../css/animaciones.css" />
-    <link rel="stylesheet" href="../css/responsive.css" />
-
-    <script type="module" src="../js/misreservas.js"></script>
+    <script defer type="module" src="../js/reservas.js"></script>
   </head>
   <body>
     <header class="main-header">
@@ -32,7 +25,7 @@
       </nav>
     </header>
 
-    <main class="main-reservas">
+    <main class="main-reservas contenedor-grilla">
       <!-- Encabezado para los gestores del club -->
       <section class="encabezado-usuario">
         <h2>
@@ -45,26 +38,23 @@
       </section>
 
       <!-- Resumen general (solo visual por ahora) -->
-      <section class="resumen-turnos">
-        <div class="resumen-item">
-          <i class="fa-regular fa-calendar-check"></i>
-          <span
-            >Total de reservas: <strong>funcionContarReservas()</strong></span
-          >
-        </div>
-        <div class="resumen-item">
-          <i class="fa-regular fa-clock"></i>
-          <span
-            >Horas totales reservadas:
-            <strong>funcionCalcularHorasTotales()</strong></span
-          >
-        </div>
-        <div class="resumen-item">
-          <i class="fa-solid fa-user-group"></i>
-          <span
-            >Clientes únicos:
-            <strong>funcionContarClientesUnicos()</strong></span
-          >
+      <section class="contenedor-grilla">
+        <div class="resumen-turnos">
+          <div class="resumen-item">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span>Total de reservas:</span>
+            <strong id="total-reservas"></strong>
+          </div>
+          <div class="resumen-item">
+            <i class="fa-regular fa-clock"></i>
+            <span>Horas totales reservadas:</span>
+            <strong id="total-horas"></strong>
+          </div>
+          <div class="resumen-item">
+            <i class="fa-solid fa-user-group"></i>
+            <span>Clientes únicos:</span>
+            <strong id="clientes-unicos"></strong>
+          </div>
         </div>
       </section>
 
@@ -74,6 +64,15 @@
           <h3 class="titulo-seccion">
             <i class="fa-solid fa-table-tennis-paddle-ball"></i> Turnos próximos
           </h3>
+          <div class="filtros-turnos">
+            <button id="filtro-todos" class="filtro-turno filtro-activo">
+              Todos
+            </button>
+            <button id="filtro-hoy" class="filtro-turno">Hoy</button>
+            <button id="filtro-semana" class="filtro-turno">
+              Próxima semana
+            </button>
+          </div>
         </div>
         <div id="lista-reservas" class="contenedor-cards"></div>
       </section>

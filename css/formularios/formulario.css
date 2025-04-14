@@ -1,0 +1,137 @@
+/* ==========================================
+   FORMULARIO CARGAR NUEVO TURNO - ESTILO ADMIN
+   ========================================== */
+
+/* CONTENEDOR HORIZONTAL DE TURNOS + JUGADOR */
+.panel-turnos-admin {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 2rem;
+}
+
+/* Cada formulario tipo tarjeta */
+.panel-turnos-admin .formulario-contenedor {
+  flex: 0 0 360px;
+  max-width: 100%;
+}
+
+/* === CONTENEDOR GENERAL DEL FORMULARIO === */
+.form-buscador {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: fadeIn 0.4s ease;
+  border: 1px solid #f0f0f0;
+}
+
+/* === TÍTULO DEL FORMULARIO === */
+.form-buscador h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-secundario);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-left: 4px solid var(--color-primario);
+  padding-left: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+/* === GRID DE DOS COLUMNAS === */
+.form-grid-dos-columnas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* === CAMPOS DE INPUT DE TEXTO === */
+.input-jugador input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: border 0.2s, box-shadow 0.2s;
+  background: #fff;
+}
+
+.input-jugador input:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 2px rgba(255, 111, 60, 0.15);
+  outline: none;
+}
+
+.input-jugador {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* === SELECTORES PERSONALIZADOS (DROPWONs) === */
+.campos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+}
+
+.campo {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding-left: 2.6rem;
+  height: 44px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: border 0.2s ease;
+}
+.campo:hover {
+  border-color: var(--color-primario);
+}
+
+.campo label {
+  position: absolute;
+  left: 0.9rem;
+  color: var(--color-primario);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dropdown-toggle {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem 0.85rem 0;
+  font-weight: 500;
+}
+
+.dropdown-toggle:focus {
+  outline: none;
+}
+
+/* === CONTENEDOR DE BOTONES === */
+.botones-accion {
+  grid-column: span 2;
+  margin: 0;
+}

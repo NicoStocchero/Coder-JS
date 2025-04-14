@@ -43,4 +43,27 @@
     grid-template-columns: 1fr;
     padding: 1rem;
   }
+
+  .form-grid-dos-columnas {
+    grid-template-columns: 1fr;
+  }
+
+  .botones-accion {
+    grid-column: span 1;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .grupo-horizontal {
+    grid-template-columns: 1fr;
+  }
+
+  .formulario-contenedor {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .calendario-simulador {
+    height: 280px;
+  }
 }
