@@ -1,38 +1,24 @@
 #js-coderhouse
 
 Alumno: Nicolás Stocchero
-Proyecto: Simulador de reservas para club de pádel
-Curso: JavaScript Flex – Segunda entrega
+Proyecto: Simulador de reservas
 
-    Descripción rápida
+Desarrollé una aplicación que permite registrar jugadores y gestionar reservas de canchas, aplicando únicamente los contenidos vistos hasta la clase 7. El proyecto cumple con los criterios obligatorios:
 
-Este simulador permite que un usuario reserve una cancha de pádel eligiendo nombre, fecha, hora y duración. Muestra una previsualización del turno, valida superposición de horarios y guarda todo en localStorage.
-Además, agregué una segunda página donde se ven las reservas realizadas.
+✅ Uso de arrays y objetos para almacenar jugadores y reservas
 
-    Qué hice
+✅ Interacción con el usuario exclusivamente a través del DOM
 
-Todo el proyecto está hecho con HTML, CSS y JavaScript.
+✅ Generación dinámica de elementos (select, li, etc.) usando appendChild y createElement
 
-El formulario permite reservar nombre, fecha, hora y duración.
+✅ Validaciones de campos con mensajes visibles en pantalla (sin alert, prompt ni console.log)
 
-Las opciones se generan a partir de arrays de objetos.
+✅ Uso de localStorage para guardar y recuperar datos
 
-Uso localStorage para guardar y recuperar las reservas.
+✅ Lógica de validación para evitar superposición de turnos
 
-Valido los campos y que no se solapen los turnos.
+✅ Diseño claro, inputs organizados, formularios diferenciados y mensajes accesibles
 
-Hay una previsualización automática del turno.
+✅ Incluye funciones de editar y eliminar tanto jugadores como reservas
 
-Separé el código en dos archivos JS: uno para el formulario (main.js) y otro para mostrar las reservas (misreservas.js).
-
-No hay prompts ni console.log. Todos los mensajes se muestran en el DOM.
-
-    Diseño
-
-Diseño moderno, claro y responsivo.
-
-Colores del club: #ffb894.
-
-Tipografía: Futura PT de Adobe Fonts.
-
-Estilo visual tipo marketplace deportivo.
+✅ Filtro funcional por fecha de reserva

@@ -1,6 +1,4 @@
-// ------------------------------
 // VARIABLES INICIALES
-// ------------------------------
 
 // Horas posibles para reservar
 const horasDisponibles = [
@@ -37,628 +35,731 @@ const horasDisponibles = [
   { id: 31, hora: "23:00" },
 ];
 
-// Cargar reservas previas si existen
-const reservas = JSON.parse(localStorage.getItem("reservas")) || [];
+const duracionesDisponibles = [
+  { valor: 60, texto: "60 min" },
+  { valor: 90, texto: "90 min" },
+  { valor: 120, texto: "120 min" },
+  { valor: 180, texto: "180 min" },
+];
 
 const jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+const reservas = JSON.parse(localStorage.getItem("reservas")) || [];
 
-// Elementos de selección de fecha y hora
-const seleccionarHora = document.getElementById("hora");
-const seleccionarFecha = document.getElementById("fecha");
-const seleccionarDuracion = document.getElementById("duracion");
+// FUNCIONES GENERALES Y VALIDACIONES
 
-// Elementos del formulario
-const nombre = document.getElementById("nombre");
-const apellido = document.getElementById("apellido");
-const email = document.getElementById("email");
-const telefono = document.getElementById("telefono");
-
-// Elementos del modal de confirmación
-const modalConfirmacion = document.getElementById("modal-confirmacion");
-const detalleConfirmacion = document.getElementById("detalle-confirmacion");
-const botonConfirmar = document.getElementById("btn-confirmar");
-const botonCancelar = document.getElementById("btn-cancelar");
-const modalJugador = document.getElementById("modal-jugador");
-const botonConfirmarJugador = document.getElementById("btn-confirmar-jugador");
-const botonCancelarJugador = document.getElementById("btn-cancelar-jugador");
-const detalleJugador = document.getElementById("detalle-jugador");
-
-let reservaPendiente = null;
-
-// Esta función capitaliza el primer carácter de una cadena
-function capitalizar(texto) {
-  return texto
+// Función para capitalizar la primera letra de cada palabra, inclusive si son varios nombres
+function capitalizarPrimeraLetra(str) {
+  return str
     .toLowerCase()
     .split(" ")
     .map((palabra) => palabra.charAt(0).toUpperCase() + palabra.slice(1))
     .join(" ");
 }
 
-// Esta función activa el menú lateral y muestra el submenú correspondiente al ícono seleccionado
-function menuLateral() {
-  const iconos = document.querySelectorAll(".nav-item");
-  const todosLosSubmenus = document.querySelectorAll(".submenu");
-  const cajaSubmenus = document.querySelector(".submenus");
+function validarEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
 
-  // Al hacer clic en un ícono, mostrar el submenú correspondiente
-  iconos.forEach((icono) => {
-    icono.addEventListener("click", () => {
-      const nombreMenu = icono.dataset.menu;
+function validarTelefono(telefono) {
+  const regex = /^\d{10}$/;
+  return regex.test(telefono);
+}
 
-      todosLosSubmenus.forEach((bloque) => {
-        bloque.style.display = "none";
-      });
+// Función para calcular los turnos ocupados en base a la hora y duración
+// Se asume que la duración es en minutos y se divide entre 30 para obtener el número de turnos ocupados
+function calcularTurnosOcupados(hora, duracion) {
+  const turno = [];
+  const cantidadHoras = duracion / 30;
+  const indiceHora = horasDisponibles.findIndex((h) => h.hora === hora);
 
-      const submenuActual = document.getElementById(`menu-${nombreMenu}`);
-      if (submenuActual) {
-        cajaSubmenus.style.display = "flex";
-        submenuActual.style.display = "flex";
+  if (indiceHora === -1 || isNaN(cantidadHoras) || cantidadHoras < 1) return [];
+
+  for (let i = 0; i < cantidadHoras; i++) {
+    const horaReservada = horasDisponibles[indiceHora + i].hora;
+    if (horaReservada) {
+      turno.push(horaReservada);
+    }
+  }
+
+  return turno;
+}
+
+// Función para validar si un turno está reservado
+// Se compara la nueva reserva con las reservas existentes para ver si hay conflictos
+function validarTurnoReservado(fecha, hora, duracion) {
+  const nuevoTurno = calcularTurnosOcupados(hora, duracion);
+  const turnosReservados = reservas.filter(
+    (reserva) => reserva.fecha === fecha
+  );
+
+  for (const reserva of turnosReservados) {
+    const horasReservadas = calcularTurnosOcupados(
+      reserva.hora,
+      reserva.duracion
+    );
+    const turnoOcupado = horasReservadas.some((horaReservada) =>
+      nuevoTurno.includes(horaReservada)
+    );
+
+    if (turnoOcupado) {
+      return false; // El turno está ocupado
+    }
+  }
+  return true;
+}
+
+// FORMULARIOS
+
+// Funciones para manejar los formularios de jugadores y reservas
+function formularioJugador() {
+  const formJugador = document.getElementById("form-jugador");
+  const mensajeError = document.getElementById("mensaje-error");
+  const tituloFormulario = document.getElementById("titulo-jugador");
+  const botonJugador = document.getElementById("btn-jugador");
+
+  if (!formJugador || !mensajeError) return;
+
+  formJugador.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const nombre = capitalizarPrimeraLetra(
+      document.getElementById("nombre")?.value.trim() || ""
+    );
+    const apellido = capitalizarPrimeraLetra(
+      document.getElementById("apellido")?.value.trim() || ""
+    );
+    const email =
+      document.getElementById("email")?.value.trim().toLowerCase() || "";
+    const telefono = document.getElementById("telefono")?.value.trim() || "";
+
+    // Limpiar mensajes anteriores
+    mensajeError.textContent = "";
+    mensajeError.className = "mensaje";
+    mensajeError.style.display = "none";
+
+    // Validaciones
+    if (!nombre || !apellido || !email || !telefono) {
+      mostrarMensaje("Por favor, completa todos los campos.", "error");
+      return;
+    }
+
+    if (!validarEmail(email)) {
+      mostrarMensaje("Por favor, ingresa un email válido.", "error");
+      return;
+    }
+
+    if (!validarTelefono(telefono)) {
+      mostrarMensaje("Por favor, ingresa un teléfono válido.", "error");
+      return;
+    }
+
+    // Editando jugador
+    const idEditando = parseInt(formJugador.dataset.editando || "0");
+
+    // Verificamos si el email o teléfono ya están registrados
+    const emailYaRegistrado = jugadores.some(
+      (j) => j.email === email && j.id !== idEditando
+    );
+    if (emailYaRegistrado) {
+      mostrarMensaje("Este email ya está registrado.", "error");
+      return;
+    }
+    const telefonoYaRegistrado = jugadores.some(
+      (j) => j.telefono === telefono && j.id !== idEditando
+    );
+    if (telefonoYaRegistrado) {
+      mostrarMensaje("Este teléfono ya está registrado.", "error");
+      return;
+    }
+
+    // Verificamos si el jugador está editando o es uno nuevo
+    if (idEditando) {
+      const index = jugadores.findIndex((j) => j.id === idEditando);
+      if (index !== -1) {
+        jugadores[index] = {
+          id: idEditando,
+          nombre,
+          apellido,
+          email,
+          telefono,
+        };
       }
-    });
+      formJugador.dataset.editando = "";
+      tituloFormulario.textContent = "Registrar jugador";
+      botonJugador.textContent = "Guardar jugador";
+    } else {
+      const nuevoJugador = {
+        id: jugadores.length + 1,
+        nombre,
+        apellido,
+        email,
+        telefono,
+      };
+      jugadores.push(nuevoJugador);
+    }
+
+    localStorage.setItem("jugadores", JSON.stringify(jugadores));
+    cargarJugadoresEnSelect();
+    mostrarJugadoresRegistrados();
+    mostrarMensaje("Jugador guardado correctamente.", "exito");
+    formJugador.reset();
   });
 }
 
-function guardarJugadorDesdeFormulario() {
-  const mensajeError = document.getElementById("mensaje-error-jugador");
-  mensajeError.textContent = "";
+function formularioReserva() {
+  const formReserva = document.getElementById("form-reserva");
+  const mensajeError = document.getElementById("mensaje-error-reserva");
+  const tituloFormulario = document.getElementById("titulo-formulario");
+  const botonReserva = document.getElementById("btn-reserva");
 
-  const nombre = capitalizar(document.getElementById("nombre").value.trim());
-  const apellido = capitalizar(
-    document.getElementById("apellido").value.trim()
-  );
-  const email = document.getElementById("email").value.trim();
-  const telefono = document.getElementById("telefono").value.trim();
+  if (!formReserva || !mensajeError) return;
 
-  const yaExiste = jugadores.some(
-    (jugador) =>
-      jugador.email.toLowerCase() === email.toLowerCase() ||
-      jugador.telefono === telefono
-  );
+  formReserva.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  if (yaExiste) {
-    mensajeError.textContent = "Ya existe un jugador con ese email o teléfono.";
-    return;
-  }
+    const jugadorId = parseInt(
+      document.getElementById("jugador")?.value.trim() || ""
+    );
+    const fecha = document.getElementById("fecha")?.value.trim() || "";
+    const hora = document.getElementById("hora")?.value.trim() || "";
+    const duracion = parseInt(
+      document.getElementById("duracion")?.value.trim() || "0"
+    );
 
-  const nuevoJugador = {
-    id: Date.now(),
-    nombre,
-    apellido,
-    email,
-    telefono,
-  };
+    mensajeError.textContent = "";
 
-  jugadores.push(nuevoJugador);
-  localStorage.setItem("jugadores", JSON.stringify(jugadores));
+    if (!jugadorId || !fecha || !hora || !duracion) {
+      mensajeError.textContent = "Por favor, completa todos los campos.";
+      return;
+    }
 
-  document.getElementById("form-jugador").reset();
+    const jugadorReservado = jugadores.find((j) => j.id === jugadorId);
+    if (!jugadorReservado) {
+      mensajeError.textContent = "Jugador no encontrado.";
+      return;
+    }
 
-  document
-    .querySelector("#dropdown-jugador .dropdown-opciones")
-    .classList.remove("abierto");
+    const idEditando = parseInt(formReserva.dataset.editando || "0");
 
-  mostrarOpcionesDeJugadores();
+    // Verificamos que el turno esté libre (excepto si es el mismo)
+    const conflicto = reservas.some((reserva) => {
+      if (idEditando && reserva.id === idEditando) return false;
+      if (reserva.fecha !== fecha) return false;
+      const horas1 = calcularTurnosOcupados(reserva.hora, reserva.duracion);
+      const horas2 = calcularTurnosOcupados(hora, duracion);
+      return horas1.some((h) => horas2.includes(h));
+    });
+
+    if (conflicto) {
+      mensajeError.textContent = "El turno ya está reservado.";
+      return;
+    }
+
+    // Modo edición
+    if (idEditando) {
+      const index = reservas.findIndex((r) => r.id === idEditando);
+      if (index !== -1) {
+        reservas[index] = {
+          id: idEditando,
+          jugadorId,
+          nombre: jugadorReservado.nombre,
+          apellido: jugadorReservado.apellido,
+          fecha,
+          hora,
+          duracion,
+        };
+      }
+      formReserva.dataset.editando = "";
+      // Volver a modo normal
+      if (tituloFormulario) tituloFormulario.textContent = "Realizar reserva";
+      if (botonReserva) botonReserva.textContent = "Guardar reserva";
+    } else {
+      // Nueva reserva
+      const nuevaReserva = {
+        id: reservas.length + 1,
+        jugadorId,
+        nombre: jugadorReservado.nombre,
+        apellido: jugadorReservado.apellido,
+        fecha,
+        hora,
+        duracion,
+      };
+      reservas.push(nuevaReserva);
+    }
+
+    localStorage.setItem("reservas", JSON.stringify(reservas));
+    mostrarReservasRegistradas();
+    mensajeError.textContent = `Reserva guardada con éxito para ${jugadorReservado.nombre} ${jugadorReservado.apellido} el ${fecha} a las ${hora}.`;
+    formReserva.reset();
+  });
 }
 
-// ------------------------------
-// FUNCIONES PARA FECHAS
-// ------------------------------
+// CARGAR SELECTS
 
-// Esta función genera un array con las fechas disponibles para reservar
-// (hoy y los próximos 6 días)
+function cargarJugadoresEnSelect() {
+  const selectJugadores = document.getElementById("jugador");
+  if (!selectJugadores) return; // Verificar si el elemento existe
+
+  selectJugadores.innerHTML = ""; // Limpiar el select antes de cargar los jugadores
+
+  jugadores.forEach((jugador) => {
+    const option = document.createElement("option");
+    option.value = jugador.id;
+    option.textContent = `${jugador.nombre} ${jugador.apellido}`;
+    selectJugadores.appendChild(option);
+  });
+}
+
+function cargarHorasEnSelect() {
+  const selectHoras = document.getElementById("hora");
+
+  if (!selectHoras) return; // Verificar si el elemento existe
+
+  selectHoras.innerHTML = ""; // Limpiar el select antes de cargar las horas
+
+  horasDisponibles.forEach((h) => {
+    const option = document.createElement("option");
+    option.value = h.hora;
+    option.textContent = h.hora;
+    selectHoras.appendChild(option);
+  });
+}
+
+// Generar fechas disponibles para los próximos 7 días
 function generarFechasDisponibles() {
-  const fechas = [];
   const hoy = new Date();
-
-  // Ciclo for para generar fechas desde hoy hasta 6 días adelante
-  for (let i = 0; i < 7; i++) {
+  const fechas = [];
+  for (let i = 0; i <= 7; i++) {
     const fecha = new Date(hoy);
     fecha.setDate(hoy.getDate() + i);
     fechas.push(fecha.toISOString().split("T")[0]);
   }
-
   return fechas;
 }
 
-// Esta función formatea una fecha en formato ISO a un formato legible
-// (ejemplo: "2025-05-15" a "Miércoles 15 de mayo")
-function formatearFecha(fechaISO) {
-  const opciones = { weekday: "long", day: "numeric", month: "long" };
-  const fecha = new Date(fechaISO + "T00:00:00");
-  const legible = fecha.toLocaleDateString("es-AR", opciones);
-  return legible.charAt(0).toUpperCase() + legible.slice(1);
-}
-
-// ------------------------------
-// FUNCIONES DE CARGA DE FECHAS Y HORAS
-// ------------------------------
-
-function mostrarOpcionesDeJugadores() {
-  const lista = document.querySelector("#dropdown-jugador .dropdown-opciones");
-  const boton = document.querySelector("#dropdown-jugador .dropdown-toggle");
-  const campoJugador = document.getElementById("jugador");
-
-  const jugadoresActualizados =
-    JSON.parse(localStorage.getItem("jugadores")) || [];
-
-  lista.innerHTML = "";
-
-  jugadoresActualizados.forEach((jugador) => {
-    const item = document.createElement("li");
-    item.textContent = `${jugador.nombre} ${jugador.apellido}`;
-    item.dataset.valor = jugador.id;
-
-    item.addEventListener("click", () => {
-      campoJugador.value = jugador.id;
-
-      boton.textContent = item.textContent;
-
-      lista.classList.remove("abierto");
-      mostrarPrevisualizacion();
-    });
-
-    lista.appendChild(item);
-  });
-
-  // Este evento SÍ debe quedar
-  boton.addEventListener("click", () => {
-    lista.classList.toggle("abierto");
+// Formatear fecha legible para mostrar en el select
+// Se usa el formato "es-AR" para español de Argentina
+function formatearFechaLegible(fechaISO) {
+  return new Date(fechaISO + "T00:00:00").toLocaleDateString("es-AR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
   });
 }
 
-// Esta función carga las fechas disponibles en el menú desplegable
-function mostrarOpcionesDeFecha() {
+// Crear opción de fecha para el select
+function crearOptionFecha(fecha) {
+  const option = document.createElement("option");
+  option.value = fecha;
+  option.textContent = formatearFechaLegible(fecha);
+  return option;
+}
+
+// Cargar fechas en el select de reservas
+function cargarFechasEnSelect() {
+  const selectFechas = document.getElementById("fecha");
+  if (!selectFechas) return;
+
+  selectFechas.innerHTML = "";
+
+  // Opción inicial
+  const opcionInicial = document.createElement("option");
+  opcionInicial.value = "";
+  opcionInicial.textContent = "Seleccionar fecha";
+  selectFechas.appendChild(opcionInicial);
+
   const fechas = generarFechasDisponibles();
-  const lista = document.querySelector("#dropdown-fecha .dropdown-opciones");
-  const boton = document.querySelector("#dropdown-fecha .dropdown-toggle");
-  const campoFecha = document.getElementById("fecha");
 
-  lista.innerHTML = ""; // Limpiamos la lista antes de agregar
+  fechas.forEach((fecha) => {
+    const option = document.createElement("option");
+    option.value = fecha;
 
-  fechas.forEach((fechaISO) => {
-    const fechaLegible = formatearFecha(fechaISO);
-    const opcion = document.createElement("li");
-    opcion.textContent = fechaLegible;
-    opcion.dataset.valor = fechaISO;
-
-    // Al hacer clic en una opción, se actualiza el input y se cierra el menú
-    opcion.addEventListener("click", () => {
-      campoFecha.value = fechaISO;
-      boton.textContent = fechaLegible;
-      lista.classList.remove("abierto");
-    });
-
-    lista.appendChild(opcion);
-  });
-
-  boton.addEventListener("click", () => {
-    lista.classList.toggle("abierto");
-  });
-}
-
-// Esta función carga las horas disponibles en el menú desplegable
-function mostrarOpcionesDeHora() {
-  const lista = document.querySelector("#dropdown-hora .dropdown-opciones");
-  const boton = document.querySelector("#dropdown-hora .dropdown-toggle");
-  const campoHora = document.getElementById("hora");
-
-  lista.innerHTML = ""; // Limpiamos antes de cargar
-
-  horasDisponibles.forEach((horaObj) => {
-    const item = document.createElement("li");
-    item.textContent = `${horaObj.hora} hs`;
-    item.dataset.valor = horaObj.hora;
-
-    item.addEventListener("click", () => {
-      campoHora.value = horaObj.hora;
-      boton.textContent = item.textContent;
-      lista.classList.remove("abierto");
-      if (typeof mostrarPrevisualizacion === "function") {
-        mostrarPrevisualizacion();
+    // Mostrar la fecha en formato legible
+    option.textContent = new Date(fecha + "T00:00:00").toLocaleDateString(
+      "es-AR",
+      {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
       }
-    });
-
-    lista.appendChild(item);
-  });
-
-  boton.addEventListener("click", () => {
-    lista.classList.toggle("abierto");
-  });
-}
-
-// Esta función carga las duraciones disponibles en el menú desplegable
-function mostrarOpcionesDeDuracion() {
-  const duraciones = [
-    { texto: "60 min", valor: "60" },
-    { texto: "90 min", valor: "90" },
-    { texto: "120 min", valor: "120" },
-  ];
-
-  const lista = document.querySelector("#dropdown-duracion .dropdown-opciones");
-  const boton = document.querySelector("#dropdown-duracion .dropdown-toggle");
-  const campoDuracion = document.getElementById("duracion");
-
-  lista.innerHTML = "";
-
-  duraciones.forEach((opcion) => {
-    const item = document.createElement("li");
-    item.textContent = opcion.texto;
-    item.dataset.valor = opcion.valor;
-
-    item.addEventListener("click", () => {
-      campoDuracion.value = opcion.valor;
-      boton.textContent = opcion.texto;
-      lista.classList.remove("abierto");
-      mostrarPrevisualizacion();
-    });
-
-    lista.appendChild(item);
-  });
-
-  boton.addEventListener("click", () => {
-    lista.classList.toggle("abierto");
-  });
-}
-
-// Esta función configura el cierre de los dropdowns al hacer clic fuera de ellos
-function configurarCierreDropdowns() {
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest("#dropdown-duracion")) {
-      document
-        .querySelector("#dropdown-duracion .dropdown-opciones")
-        ?.classList.remove("abierto");
-    }
-    if (!e.target.closest("#dropdown-fecha")) {
-      document
-        .querySelector("#dropdown-fecha .dropdown-opciones")
-        ?.classList.remove("abierto");
-    }
-    if (!e.target.closest("#dropdown-hora")) {
-      document
-        .querySelector("#dropdown-hora .dropdown-opciones")
-        ?.classList.remove("abierto");
-    }
-    if (!e.target.closest(".sidebar")) {
-      document.querySelector(".submenus").style.display = "none";
-      document.querySelectorAll(".submenu").forEach((bloque) => {
-        bloque.style.display = "none";
-      });
-    }
-  });
-}
-
-// Esta función calcula la hora final de una reserva a partir de la hora de inicio y la duración
-function calcularHoraFinal(inicio, duracion) {
-  const turnos = duracion / 30;
-  const iInicio = horasDisponibles.findIndex((h) => h.hora === inicio);
-  if (iInicio === -1) return null;
-  const iFinal = iInicio + turnos;
-  return horasDisponibles[iFinal] ? horasDisponibles[iFinal].hora : null;
-}
-
-// Esta función verifica si un turno está disponible en una fecha específica comparando las reservas existentes
-function esTurnoDisponible(fecha, inicio, fin) {
-  const delDia = reservas.filter((r) => r.fecha === fecha);
-  const iNuevoInicio = horasDisponibles.findIndex((h) => h.hora === inicio);
-  const iNuevoFin = horasDisponibles.findIndex((h) => h.hora === fin);
-
-  return !delDia.some((r) => {
-    const iExistenteInicio = horasDisponibles.findIndex(
-      (h) => h.hora === r.hora
     );
-    const iExistenteFin = horasDisponibles.findIndex(
-      (h) => h.hora === r.horaFinal
-    );
-    return iExistenteInicio < iNuevoFin && iExistenteFin > iNuevoInicio;
+
+    selectFechas.appendChild(option);
   });
 }
 
-// ------------------------------
-// FORMULARIO Y PREVISUALIZACIÓN
-// ------------------------------
+// Cargar duraciones en el select de reservas
+function cargarDuracionesEnSelect() {
+  const selectDuraciones = document.getElementById("duracion");
 
-// Esta función cambió muchas veces, ya que antes previsualizaba el texto en la pantalla. Pero para mejorar la UX, quise implementar un modal luego.
-// Esta función muestra una previsualización de la reserva
-function mostrarPrevisualizacion() {
-  const preview = document.getElementById("previsualizar-reserva");
-  if (!preview) return;
+  if (!selectDuraciones) return; // Verificar si el elemento existe
 
-  const horaFinal = calcularHoraFinal(
-    seleccionarHora.value,
-    parseInt(seleccionarDuracion.value)
-  );
-  preview.innerHTML = "";
+  selectDuraciones.innerHTML = ""; // Limpiar el select antes de cargar las duraciones
 
-  if (!horaFinal) {
-    preview.textContent = "No se puede reservar esa duración.";
+  duracionesDisponibles.forEach((duracion) => {
+    const opcion = document.createElement("option");
+    opcion.value = duracion.valor;
+    opcion.textContent = duracion.texto;
+    selectDuraciones.appendChild(opcion);
+  });
+}
+
+//  JUGADORES Y RESERVAS REGISTRADOS
+
+// Mostrar mensaje de error o éxito
+// Se usa un ID por defecto para el mensaje de error, pero se puede cambiar al llamar a la función
+function mostrarMensaje(texto, tipo, idElemento = "mensaje-error") {
+  const elemento = document.getElementById(idElemento);
+  if (!elemento) return;
+
+  elemento.innerHTML = `
+    <i class="fa-solid ${
+      tipo === "error" ? "fa-circle-exclamation" : "fa-circle-check"
+    }"></i>
+    ${texto}
+  `;
+  elemento.style.display = "flex";
+  elemento.className = `mensaje ${
+    tipo === "error" ? "mensaje-error" : "mensaje-exito"
+  }`;
+}
+
+// Función para calcular la hora de fin de una reserva
+function calcularHoraFin(horaInicio, duracion) {
+  const [hora, minuto] = horaInicio.split(":").map(Number);
+  const inicio = new Date();
+  inicio.setHours(hora);
+  inicio.setMinutes(minuto);
+  inicio.setMinutes(inicio.getMinutes() + duracion);
+  return inicio.toTimeString().slice(0, 5);
+}
+
+// Mostrar jugadores registrados en la sección correspondiente
+function mostrarJugadoresRegistrados() {
+  const contenedor = document.getElementById("lista-jugadores");
+  if (!contenedor) return;
+  contenedor.innerHTML = "";
+
+  if (jugadores.length === 0) {
+    const vacio = document.createElement("p");
+    vacio.textContent = "No hay jugadores registrados.";
+    contenedor.appendChild(vacio);
     return;
   }
 
-  preview.innerHTML = `
-    <strong>📅 ${formatearFecha(seleccionarFecha.value)}</strong>
-    <strong>⏰ De ${seleccionarHora.value} a ${horaFinal} hs</strong>
-  `;
-}
+  jugadores.forEach((jugador) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-// Esta función activa la previsualización de la reserva al cambiar los selects
-function activarPrevisualizacion() {
-  seleccionarFecha.addEventListener("change", mostrarPrevisualizacion);
-  seleccionarHora.addEventListener("change", mostrarPrevisualizacion);
-  seleccionarDuracion.addEventListener("change", mostrarPrevisualizacion);
-}
-
-// ------------------------------
-// RESERVAS
-// ------------------------------
-
-// Esta función crea una tarjeta de reserva
-function crearTarjeta(reserva, index) {
-  const tarjeta = document.createElement("div");
-  tarjeta.classList.add("card-reserva");
-
-  tarjeta.innerHTML = `
-    <div class="estado-fecha">
-      <p class="hora-turno"><i class="fas fa-clock"></i> ${reserva.hora} a ${
-    reserva.horaFinal
-  } hs</p>
-      <span class="badge-estado">Confirmada</span>
+    card.innerHTML = `
+  <div class="card-body">
+    <div class="info-jugador">
+      <div class="header-jugador">
+        <i class="fa-solid fa-user icono-card"></i>
+        <h3 class="nombre-jugador">
+          ${jugador.nombre.toUpperCase()} ${jugador.apellido.toUpperCase()}
+          <span class="badge badge-activo">Activo</span>
+        </h3>
+      </div>
+      <p class="dato-icono">
+        <i class="fa-solid fa-envelope"></i>
+        <span>${jugador.email}</span>
+      </p>
+      <p class="dato-icono">
+        <i class="fa-solid fa-phone"></i>
+        <span>${jugador.telefono}</span>
+      </p>
     </div>
-    <h4>
-      <i class="fas fa-user"></i> ${reserva.nombre.toUpperCase()} ${reserva.apellido.toUpperCase()}
-    </h4>
-    <p class="fecha-turno">
-      <i class="fas fa-calendar-day"></i> ${formatearFecha(reserva.fecha)}
-    </p>
-    <p>
-      <i class="fas fa-hourglass-half"></i> ${reserva.duracion} minutos
-    </p>
-    <p>
-      <i class="fas fa-envelope"></i> ${reserva.email}
-    </p>
-    <button class="btn-cancelar" data-index="${index}">Cancelar</button>
-  `;
+    <div class="acciones-jugador">
+      <button class="boton-secundario btn-editar-jugador" data-id="${
+        jugador.id
+      }">
+        <i class="fa-solid fa-pen"></i> Editar
+      </button>
+      <button class="boton-principal btn-eliminar" data-id="${jugador.id}">
+        <i class="fa-solid fa-trash"></i> Eliminar
+      </button>
+    </div>
+  </div>
+`;
 
-  return tarjeta;
+    contenedor.appendChild(card);
+  });
+
+  document.querySelectorAll(".btn-editar-jugador").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = parseInt(btn.dataset.id);
+      const jugador = jugadores.find((j) => j.id === id);
+      if (!jugador) return;
+
+      document.getElementById("nombre").value = jugador.nombre;
+      document.getElementById("apellido").value = jugador.apellido;
+      document.getElementById("email").value = jugador.email;
+      document.getElementById("telefono").value = jugador.telefono;
+      document.getElementById("form-jugador").dataset.editando = jugador.id;
+      document.getElementById("titulo-jugador").textContent =
+        "Editando jugador";
+      document.getElementById("btn-jugador").textContent = "Guardar cambios";
+    });
+  });
+
+  document.querySelectorAll(".btn-eliminar").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = parseInt(btn.dataset.id);
+      mostrarModalConfirmacion("¿Eliminar este jugador?", () =>
+        eliminarJugador(id)
+      );
+    });
+  });
 }
 
-// Esta funcion carga las reservas y las ordena por fecha y hora
-function cargarReservas() {
+// Mostrar reservas registradas en la sección correspondiente
+function mostrarReservasRegistradas() {
   const contenedor = document.getElementById("lista-reservas");
+  const fechaFiltrada = document.getElementById("filtro-fecha")?.value;
   contenedor.innerHTML = "";
 
-  const copia = reservas.slice();
-  copia.sort(
-    (a, b) =>
-      new Date(`${a.fecha}T${a.hora}`) - new Date(`${b.fecha}T${b.hora}`)
-  );
+  const reservasFiltradas = fechaFiltrada
+    ? reservas.filter((r) => r.fecha === fechaFiltrada)
+    : reservas;
 
-  for (const reserva of copia) {
-    crearTarjeta(reserva);
+  if (reservasFiltradas.length === 0) {
+    const mensaje = document.createElement("p");
+    mensaje.textContent = "No hay reservas para esta fecha.";
+    contenedor.appendChild(mensaje);
+    return;
+  }
+
+  reservasFiltradas.forEach((reserva) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const horaFin = calcularHoraFin(reserva.hora, reserva.duracion);
+
+    card.innerHTML = `
+  <div class="card-body">
+    <div class="info-reserva">
+      <div class="header-reserva">
+        <i class="fa-solid fa-user icono-card"></i>
+        <h3 class="nombre-jugador">
+          ${reserva.nombre.toUpperCase()} ${reserva.apellido.toUpperCase()}
+        </h3>
+      </div>
+      <p><i class="fa-solid fa-calendar-day"></i> ${formatearFechaLegible(
+        reserva.fecha
+      )}</p>
+      <p><i class="fa-solid fa-clock"></i> ${reserva.hora} a ${horaFin} (${
+      reserva.duracion
+    } min)</p>
+    </div>
+    <div class="acciones-reserva">
+      <button class="boton-secundario btn-editar" data-id="${reserva.id}">
+        <i class="fa-solid fa-pen"></i> Editar
+      </button>
+      <button class="boton-principal btn-eliminar" data-id="${reserva.id}">
+        <i class="fa-solid fa-trash"></i> Eliminar
+      </button>
+    </div>
+  </div>
+`;
+
+    contenedor.appendChild(card);
+  });
+
+  conectarBotonesDeReserva();
+}
+
+// Conectar botones de editar y eliminar reservas
+// Se usa para que los botones funcionen después de que se cargan las reservas
+function conectarBotonesDeReserva() {
+  document.querySelectorAll(".btn-editar").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const reservaId = parseInt(btn.dataset.id);
+      const reserva = reservas.find((r) => r.id === reservaId);
+      if (!reserva) return;
+
+      document.getElementById("jugador").value = reserva.jugadorId;
+      document.getElementById("fecha").value = reserva.fecha;
+      document.getElementById("hora").value = reserva.hora;
+      document.getElementById("duracion").value = reserva.duracion;
+
+      const form = document.getElementById("form-reserva");
+      form.dataset.editando = reserva.id;
+
+      document.getElementById("titulo-formulario").textContent =
+        "Editando reserva";
+      document.getElementById("btn-reserva").textContent = "Guardar cambios";
+    });
+  });
+
+  document.querySelectorAll(".btn-eliminar").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const reservaId = parseInt(btn.dataset.id);
+      mostrarModalConfirmacion(
+        "¿Estás seguro que querés eliminar esta reserva?",
+        () => {
+          eliminarReserva(reservaId);
+        }
+      );
+    });
+  });
+}
+
+// Eliminar jugador o reserva
+function eliminarJugador(jugadorId) {
+  const jugadorIndex = jugadores.findIndex((j) => j.id === jugadorId);
+  if (jugadorIndex !== -1) {
+    jugadores.splice(jugadorIndex, 1);
+    localStorage.setItem("jugadores", JSON.stringify(jugadores));
+    mostrarJugadoresRegistrados(); // Actualizar la lista de jugadores
+  }
+}
+function eliminarReserva(reservaId) {
+  const reservaIndex = reservas.findIndex((r) => r.id === reservaId);
+  if (reservaIndex !== -1) {
+    reservas.splice(reservaIndex, 1);
+    localStorage.setItem("reservas", JSON.stringify(reservas));
+    mostrarReservasRegistradas(); // Actualizar la lista de reservas
   }
 }
 
-// Esta función obtiene los datos del formulario y los devuelve como un objeto
-function obtenerDatos() {
-  const jugadorId = document.getElementById("jugador").value;
+// FILTROS
+// Filtrar reservas por fecha seleccionada
+// Se usa el evento change para detectar cuando se selecciona una fecha
+function filtrarReservasPorFecha() {
+  const fechaSeleccionada = document.getElementById("filtro-fecha").value;
+  const listaReservas = document.getElementById("lista-reservas");
 
-  const jugadoresActualizados =
-    JSON.parse(localStorage.getItem("jugadores")) || [];
-  const jugador = jugadoresActualizados.find((j) => j.id == jugadorId);
+  if (!listaReservas) return;
+  listaReservas.innerHTML = "";
 
-  return {
-    nombre: jugador?.nombre || "",
-    apellido: jugador?.apellido || "",
-    email: jugador?.email || "",
-    telefono: jugador?.telefono || "",
-    fecha: seleccionarFecha.value,
-    hora: seleccionarHora.value,
-    duracion: parseInt(seleccionarDuracion.value),
+  const reservasFiltradas = fechaSeleccionada
+    ? reservas.filter((reserva) => reserva.fecha === fechaSeleccionada)
+    : reservas;
+
+  if (reservasFiltradas.length === 0) {
+    const elemento = document.createElement("li");
+    elemento.textContent = "No hay reservas para esta fecha.";
+    listaReservas.appendChild(elemento);
+    return;
+  }
+
+  reservasFiltradas.forEach((reserva) => {
+    const elemento = document.createElement("li");
+    elemento.innerHTML = `
+      ${reserva.nombre} ${reserva.apellido} - ${reserva.fecha} - ${reserva.hora}
+      <button class="btn-editar" data-id="${reserva.id}">Editar</button>
+      <button class="btn-eliminar" data-id="${reserva.id}">Eliminar</button>
+    `;
+    listaReservas.appendChild(elemento);
+  });
+
+  // Volvemos a conectar los botones
+  conectarBotonesDeReserva();
+}
+// Cargar fechas filtrables en el select de reservas
+// Se usa para que el select tenga las fechas disponibles para filtrar
+function cargarFechasFiltrables() {
+  const selectFiltro = document.getElementById("filtro-fecha");
+  if (!selectFiltro) return;
+
+  selectFiltro.innerHTML = "";
+
+  // Opción "todas"
+  const opcionTodas = document.createElement("option");
+  opcionTodas.value = "";
+  opcionTodas.textContent = "Todas las fechas";
+  selectFiltro.appendChild(opcionTodas);
+
+  // Extraer fechas únicas de reservas
+  const fechasUnicas = [...new Set(reservas.map((r) => r.fecha))];
+
+  fechasUnicas.forEach((fecha) => {
+    const option = document.createElement("option");
+    option.value = fecha;
+    option.textContent = formatearFechaLegible(fecha);
+    selectFiltro.appendChild(option);
+  });
+}
+
+// ESTADISTICAS
+// Funciones para mostrar estadísticas de jugadores y reservas
+// Se usan para mostrar información general sobre el sistema
+function totalJugadores() {
+  return jugadores.length;
+}
+
+function totalReservas() {
+  return reservas.length;
+}
+
+function minutosTotalesReservados() {
+  return reservas.reduce((total, reserva) => total + reserva.duracion, 0);
+}
+
+// Mostrar estadísticas en la sección correspondiente
+function mostrarEstadisticas() {
+  const statsContainer = document.getElementById("estadisticas");
+  if (!statsContainer) return;
+
+  statsContainer.innerHTML = `
+    <div class="card">
+      <h3>📊 Estadísticas</h3>
+      <p><strong>Jugadores registrados:</strong> ${totalJugadores()}</p>
+      <p><strong>Reservas totales:</strong> ${totalReservas()}</p>
+      <p><strong>Minutos jugados:</strong> ${minutosTotalesReservados()} min</p>
+    </div>
+  `;
+}
+
+// MODALS
+// Función para mostrar un modal de confirmación
+// Se usa para confirmar acciones como eliminar un jugador o reserva
+function mostrarModalConfirmacion(texto, callbackConfirmar) {
+  const modal = document.getElementById("modal-confirmacion");
+  const modalTexto = document.getElementById("modal-texto");
+  const btnConfirmar = document.getElementById("btn-confirmar");
+  const btnCancelar = document.getElementById("btn-cancelar");
+
+  if (!modal || !modalTexto || !btnConfirmar || !btnCancelar) return;
+
+  modalTexto.textContent = texto;
+  modal.classList.remove("hidden");
+  document.body.classList.add("modal-abierto");
+
+  btnConfirmar.onclick = () => {
+    callbackConfirmar();
+    modal.classList.add("hidden");
+    document.body.classList.remove("modal-abierto");
+  };
+
+  btnCancelar.onclick = () => {
+    modal.classList.add("hidden");
+    document.body.classList.remove("modal-abierto");
   };
 }
 
-// Esta función valida los datos del formulario y devuelve un mensaje de error si hay algún problema
-function validarDatos({ nombre, apellido, email, telefono }) {
-  if (nombre.length < 2) return "Nombre muy corto.";
-  if (apellido.length < 2) return "Apellido muy corto.";
-  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  if (!regexEmail.test(email)) return "Email no válido.";
-  if (!/^\d{10}$/.test(telefono)) return "Teléfono no válido.";
-  return null;
+// INICIO DEL SISTEMA
+/// Función para iniciar el sistema y cargar los formularios y datos iniciales
+function iniciarSistema() {
+  formularioJugador();
+  formularioReserva();
+  cargarJugadoresEnSelect();
+  cargarHorasEnSelect();
+  cargarFechasEnSelect();
+  cargarFechasFiltrables();
+  cargarDuracionesEnSelect();
+  mostrarJugadoresRegistrados();
+  mostrarReservasRegistradas();
+  mostrarEstadisticas();
 }
 
-// Esta función crea una reserva a partir de los datos del formulario
-function crearReserva(datos) {
-  const horaFinal = calcularHoraFinal(datos.hora, datos.duracion);
-  if (!horaFinal) return null;
-  if (!esTurnoDisponible(datos.fecha, datos.hora, horaFinal)) return null;
-  return { ...datos, horaFinal };
-}
-
-// Esta función guarda la reserva en el array de reservas y en el localStorage
-function guardarReserva(reserva) {
-  reservas.push(reserva);
-  localStorage.setItem("reservas", JSON.stringify(reservas));
-
-  const contenedor = document.getElementById("lista-reservas");
-  if (contenedor) {
-    const nuevaTarjeta = crearTarjeta(reserva, reservas.length - 1);
-    contenedor.appendChild(nuevaTarjeta);
-  }
-}
-
-// Funcion con mucha ayuda de IA.
-// Esta función muestra el modal de confirmación y activa los botones de confirmar y cancelar
-function mostrarModalConfirmacion(reserva) {
-  reservaPendiente = reserva;
-
-  detalleConfirmacion.innerHTML = `
-  <p><i class="fas fa-question-circle"></i> ¿Querés confirmar la reserva?</p>
-  <p><i class="fas fa-user"></i> ${reserva.nombre} ${
-    reserva.apellido
-  }</p> <!-- ✅ agregado -->
-  <p><i class="fas fa-calendar-day"></i> ${formatearFecha(reserva.fecha)}</p>
-  <p><i class="fas fa-clock"></i> De ${reserva.hora} a ${
-    reserva.horaFinal
-  } hs</p>
-  <p><i class="fas fa-hourglass-half"></i> ${reserva.duracion} minutos</p>
-`;
-
-  modalConfirmacion.classList.remove("hidden");
-
-  // Misma solucion que la IA. No se que hace cloneNode, pero me lo arregló.
-  const nuevoBotonConfirmar = botonConfirmar.cloneNode(true);
-  const nuevoBotonCancelar = botonCancelar.cloneNode(true);
-  botonConfirmar.parentNode.replaceChild(nuevoBotonConfirmar, botonConfirmar);
-  botonCancelar.parentNode.replaceChild(nuevoBotonCancelar, botonCancelar);
-  nuevoBotonConfirmar.addEventListener("click", () => {
-    if (reservaPendiente) {
-      guardarReserva(reservaPendiente);
-      document.getElementById("form-reserva").reset();
-      modalConfirmacion.classList.add("hidden");
-      reservaPendiente = null;
-    }
-  });
-
-  nuevoBotonCancelar.addEventListener("click", () => {
-    modalConfirmacion.classList.add("hidden");
-    reservaPendiente = null;
-  });
-}
-function mostrarModalJugadorConfirmacion(jugador) {
-  detalleJugador.innerHTML = `
-    <p><i class="fas fa-question-circle"></i> ¿Querés agregar este jugador?</p>
-    <p><i class="fas fa-user"></i> ${jugador.nombre} ${jugador.apellido}</p>
-    <p><i class="fas fa-envelope"></i> ${jugador.email}</p>
-    <p><i class="fas fa-phone"></i> ${jugador.telefono}</p>
-  `;
-
-  modalJugador.classList.remove("hidden");
-
-  // 🚫 Estas constantes no se pueden volver a usar con el mismo nombre, así que usamos nuevos
-  const nuevoBtnConfirmarJugador = botonConfirmarJugador.cloneNode(true);
-  const nuevoBtnCancelarJugador = botonCancelarJugador.cloneNode(true);
-
-  // Reemplazamos en el DOM
-  botonConfirmarJugador.parentNode.replaceChild(
-    nuevoBtnConfirmarJugador,
-    botonConfirmarJugador
-  );
-  botonCancelarJugador.parentNode.replaceChild(
-    nuevoBtnCancelarJugador,
-    botonCancelarJugador
-  );
-
-  // Listeners NUEVOS
-  nuevoBtnConfirmarJugador.addEventListener("click", () => {
-    jugadores.push(jugador);
-    localStorage.setItem("jugadores", JSON.stringify(jugadores));
-    document.getElementById("form-jugador").reset();
-    mostrarOpcionesDeJugadores();
-    modalJugador.classList.add("hidden");
-  });
-
-  nuevoBtnCancelarJugador.addEventListener("click", () => {
-    modalJugador.classList.add("hidden");
-  });
-}
-
-// ------------------------------
-// EVENTO PRINCIPAL
-// ------------------------------
-
-// Esta función prepara el formulario para que al enviarlo se validen los datos y se guarde la reserva
-function prepararFormularioReserva() {
-  const form = document.getElementById("form-reserva");
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const datos = obtenerDatos();
-      const mensajeError = document.getElementById("mensajesDeError");
-      mensajeError.textContent = "";
-
-      const mensaje = validarDatos(datos);
-      if (mensaje) {
-        mensajeError.textContent = mensaje;
-        return;
-      }
-
-      const reserva = crearReserva(datos);
-      if (!reserva) {
-        mensajeError.textContent = "Turno no disponible.";
-        return;
-      }
-
-      mostrarModalConfirmacion(reserva);
-    });
-  }
-}
-
-function prepararFormularioJugador() {
-  const form = document.getElementById("form-jugador");
-  if (form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const datos = {
-        nombre: capitalizar(nombre.value.trim()),
-        apellido: capitalizar(apellido.value.trim()),
-        email: email.value.trim(),
-        telefono: telefono.value.trim(),
-      };
-
-      const mensajeError = document.getElementById("mensaje-error-jugador");
-      mensajeError.textContent = "";
-
-      const mensaje = validarDatos(datos);
-      if (mensaje) {
-        mensajeError.textContent = mensaje;
-        return;
-      }
-
-      // Reutilizamos la misma lógica: agregamos ID y mandamos al modal
-      const nuevoJugador = { ...datos, id: Date.now() };
-      mostrarModalJugadorConfirmacion(nuevoJugador);
-    });
-  }
-}
-
-// Esta función permite eliminar una reserva
-function eliminarReserva(index) {
-  reservas.splice(index, 1);
-  localStorage.setItem("reservas", JSON.stringify(reservas));
-}
-
-// ------------------------------
-// INICIAR TODO
-// ------------------------------
-
-// Esta función se ejecuta al cargar la página y llama a las funciones necesarias para inicializar la página
-function iniciarFuncionesDeReserva() {
-  const formularioReserva = document.getElementById("form-reserva");
-
-  if (formularioReserva) {
-    menuLateral();
-    mostrarOpcionesDeJugadores();
-    mostrarOpcionesDeFecha();
-    mostrarOpcionesDeHora();
-    mostrarOpcionesDeDuracion();
-    configurarCierreDropdowns();
-    activarPrevisualizacion();
-    prepararFormularioJugador();
-    prepararFormularioReserva();
-  }
-}
-
-document.addEventListener("DOMContentLoaded", iniciarFuncionesDeReserva);
-
-// ------------------------------
-// EXPORTAR FUNCIONES
-// ------------------------------
-
-export {
-  reservas,
-  crearTarjeta,
-  cargarReservas,
-  eliminarReserva,
-  formatearFecha,
-};
+// Evento DOMContentLoaded para iniciar el sistema
+// Se usa para asegurarse de que el DOM esté completamente cargado antes de ejecutar el código
+document.addEventListener("DOMContentLoaded", iniciarSistema);
+// Evento change para filtrar reservas por fecha
+// Se usa para detectar cuando se selecciona una fecha en el select de filtro
+document
+  .getElementById("filtro-fecha")
+  ?.addEventListener("change", filtrarReservasPorFecha);

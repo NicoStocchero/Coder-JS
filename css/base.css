@@ -1,0 +1,101 @@
+/* =======================================
+   BASE - ESTILOS GENERALES Y RESETEO
+   ======================================= */
+
+:root {
+  --color-primario: #ff6f3c;
+  --color-secundario: #2d2e32;
+  --color-acento: #ffb894;
+  --color-exito: #27ae60;
+  --color-error: #c0392b;
+  --color-fondo: #f4f4f4;
+  --color-tarjeta: #ffffff;
+  --color-texto: #111;
+  --color-muted: #666;
+  --color-linea: #e0e0e0;
+
+  --sombra-suave: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --sombra-tarjeta: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  --fuente-principal: "Futura PT", "Segoe UI", "Roboto", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+p {
+  margin-bottom: 0.5rem;
+}
+
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-linea);
+  margin: 2rem 0;
+}

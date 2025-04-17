@@ -3,349 +3,158 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RENACE PADEL CLUB</title>
-
-    <link rel="stylesheet" href="https://use.typekit.net/zbi3xkg.css" />
+    <title>RESERVAS DE PADEL</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="./css/main.css" />
 
-    <script defer type="module" src="js/main.js"></script>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script defer src="../js/main.js"></script>
   </head>
+
   <body>
-    <header class="main-header">
-      <h1>RENACE PADEL CLUB</h1>
+    <header class="header-principal">
+      <div class="logo-club">
+        <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+        <span>RESERVAS DE PADEL</span>
+      </div>
       <nav class="nav-principal">
-        <!-- SIDEBAR RENACE CLUB - Íconos principales del sistema -->
-        <aside class="sidebar">
-          <ul class="nav-iconos">
-            <!-- ACCESO GENERAL -->
-            <li class="nav-item" onclick="window.location.href='index.html'">
-              <i class="fa-solid fa-house"></i>
-            </li>
-
-            <hr />
-
-            <!-- OPERACIONES DEL DÍA A DÍA -->
-            <li
-              class="nav-item"
-              onclick="window.location.href='/html/reservas.html'"
-            >
-              <i class="fa-solid fa-calendar-check"></i>
-            </li>
-            <li
-              class="nav-item"
-              onclick="window.location.href='/html/torneos.html'"
-            >
-              <i class="fa-solid fa-trophy"></i>
-            </li>
-            <li
-              class="nav-item"
-              onclick="window.location.href='/html/jugadores.html'"
-            >
-              <i class="fa-solid fa-users"></i>
-            </li>
-
-            <hr />
-
-            <!-- BAR -->
-            <li class="nav-item" data-menu="bar">
-              <i class="fa-solid fa-beer-mug-empty"></i>
-            </li>
-
-            <hr />
-
-            <!-- ÁREAS DE GESTIÓN -->
-            <li class="nav-item" data-menu="finanzas">
-              <i class="fa-solid fa-file-invoice-dollar"></i>
-            </li>
-            <li class="nav-item" data-menu="estadisticas">
-              <i class="fa-solid fa-chart-line"></i>
-            </li>
-            <li class="nav-item" data-menu="miclub">
-              <i class="fa-solid fa-building-user"></i>
-            </li>
-          </ul>
-
-          <div class="submenus">
-            <!-- BAR -->
-            <div class="submenu" id="menu-bar">
-              <a href="#">Inventario del bar</a>
-              <a href="#">Pedidos</a>
-              <a href="#">Ofertas activas</a>
-              <a href="#">Consumos</a>
-            </div>
-
-            <!-- MI CLUB -->
-            <div class="submenu" id="menu-miclub">
-              <a href="#">Inventario general</a>
-              <a href="#">Gestión de membresías</a>
-              <a href="#">Fidelización</a>
-              <a href="#">Ajustes generales</a>
-            </div>
-
-            <!-- FINANZAS -->
-            <div class="submenu" id="menu-finanzas">
-              <a href="#">Informe económico</a>
-              <a href="#">Historial de pagos</a>
-            </div>
-
-            <!-- ESTADÍSTICAS -->
-            <div class="submenu" id="menu-estadisticas">
-              <a href="#">Torneos y ligas</a>
-              <a href="#">Estadísticas por jugador</a>
-              <a href="#">Consumos y bar</a>
-            </div>
-          </div>
-        </aside>
+        <a href="index.html" class="nav-item activo">Inicio</a>
       </nav>
     </header>
-
-    <main class="main-reservas contenedor-grilla">
-      <!-- Encabezado de la sección -->
-      <section class="encabezado-usuario">
-        <h2>
-          <i class="fa-solid fa-table-tennis-paddle-ball"></i> Crear nueva
-          reserva
-        </h2>
-        <p class="texto-contexto">
-          Completá los datos del jugador y seleccioná el turno para reservar tu
-          cancha en Renace.
-        </p>
-      </section>
-
-      <!-- CONTENEDOR GENERAL DE LA VISTA -->
-      <section class="grupo-horizontal">
-        <!-- Calendario -->
-        <div class="calendario-dashboard">
-          <h3><i class="fa-regular fa-calendar-days"></i> Calendario</h3>
-          <p style="font-size: 0.95rem; color: #777">
-            (Acá me gustaría poner un calendario interactivo pero no tengo los
-            conocimientos para saber cómo hacerlo)
-          </p>
-          <div class="calendario-placeholder">
-            <img
-              src="./Imagenes/calendario-ejemplo.png"
-              alt="Ejemplo de calendario de reservas"
-              class="calendario-ejemplo"
-            />
-            <small style="color: #777"
-              >Ejemplo visual de cómo se verá el calendario interactivo</small
-            >
-          </div>
-        </div>
-
-        <!-- Panel lateral derecho con formularios -->
-        <section class="panel-turnos-admin">
-          <section class="formulario-contenedor">
-            <form id="form-reserva" class="form-buscador">
-              <h3><i class="fa-solid fa-calendar-plus"></i> Crear turno</h3>
-              <div class="form-grid-dos-columnas">
-                <div class="campo" id="dropdown-jugador">
-                  <label><i class="fa-regular fa-user"></i></label>
-                  <button type="button" class="dropdown-toggle">Jugador</button>
-                  <ul class="dropdown-opciones"></ul>
-                  <input type="hidden" id="jugador" required />
-                </div>
-                <div class="campo" id="dropdown-fecha">
-                  <label><i class="fa-regular fa-calendar"></i></label>
-                  <button type="button" class="dropdown-toggle">Fecha</button>
-                  <ul class="dropdown-opciones"></ul>
-                  <input type="hidden" id="fecha" required />
-                </div>
-                <div class="campo" id="dropdown-hora">
-                  <label><i class="fa-regular fa-clock"></i></label>
-                  <button type="button" class="dropdown-toggle">Hora</button>
-                  <ul class="dropdown-opciones"></ul>
-                  <input type="hidden" id="hora" required />
-                </div>
-                <div class="campo" id="dropdown-duracion">
-                  <label><i class="fa-solid fa-hourglass-half"></i></label>
-                  <button type="button" class="dropdown-toggle">
-                    Duración
-                  </button>
-                  <ul class="dropdown-opciones"></ul>
-                  <input type="hidden" id="duracion" required />
-                </div>
-              </div>
-              <div class="botones-accion">
-                <button type="submit" class="boton-principal">
-                  <i class="fa-solid fa-magnifying-glass"></i> Ver
-                  disponibilidad
-                </button>
-              </div>
-              <p id="mensajesDeError" class="errores"></p>
-            </form>
-          </section>
-
-          <section class="formulario-contenedor">
-            <form id="form-jugador" class="form-buscador">
-              <h3><i class="fa-solid fa-user-plus"></i> Agregar jugador</h3>
-              <div class="form-grid-dos-columnas input-jugador">
-                <input type="text" id="nombre" placeholder="Nombre" required />
-                <input
-                  type="text"
-                  id="apellido"
-                  placeholder="Apellido"
-                  required
-                />
+    <main class="contenedor-principal">
+      <!-- ==========================
+           COLUMNA IZQUIERDA: Formularios
+           ========================== -->
+      <section class="columna-formularios">
+        <!-- FORMULARIO JUGADOR -->
+        <div class="tarjeta-formulario">
+          <h2 id="titulo-jugador">Registrar jugador</h2>
+          <form id="form-jugador">
+            <div class="campo-formulario">
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" placeholder="Ej: Juan" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="apellido">Apellido:</label>
+              <input
+                type="text"
+                id="apellido"
+                placeholder="Ej: Pérez"
+                required
+              />
+            </div>
+            <div class="campo-formulario con-icono">
+              <label for="email">Correo electrónico:</label>
+              <div class="input-con-icono">
+                <i class="fa-solid fa-envelope"></i>
                 <input
                   type="email"
                   id="email"
-                  placeholder="Correo electrónico"
+                  placeholder="Ej: juanperez@mail.com"
                   required
                 />
+              </div>
+            </div>
+
+            <div class="campo-formulario con-icono">
+              <label for="telefono">Teléfono:</label>
+              <div class="input-con-icono">
+                <i class="fa-solid fa-phone"></i>
                 <input
                   type="tel"
                   id="telefono"
-                  placeholder="WhatsApp del jugador"
+                  placeholder="Ej: 3511234567"
                   required
                 />
               </div>
+            </div>
 
-              <!-- 🔽 NUEVO BLOQUE para errores -->
-              <p id="mensaje-error-jugador" class="errores"></p>
+            <div class="botones-formulario">
+              <button id="btn-jugador" type="submit" class="boton-guardar">
+                <i class="fa-solid fa-user-plus"></i> Guardar jugador
+              </button>
+            </div>
+            <p id="mensaje-error" class="mensaje" style="display: none"></p>
+          </form>
+        </div>
 
-              <div class="botones-accion">
-                <button type="submit" class="boton-principal">
-                  <i class="fa-solid fa-user-plus"></i> Guardar jugador
-                </button>
-              </div>
-            </form>
-          </section>
-        </section>
-      </section>
-
-      <section class="dashboard-funcionalidades">
-        <h3>
-          <i class="fa-solid fa-layer-group"></i> Funcionalidades del sistema a
-          programar
-        </h3>
-
-        <div class="grid-funcionalidades">
-          <!-- 1. Caja y stock -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-cash-register"></i>
-            <h4>Caja y Stock</h4>
-            <p>Control de ventas, gastos y movimientos diarios.</p>
-          </div>
-
-          <!-- 2. Pagos Online -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-credit-card"></i>
-            <h4>Pagos y membresías</h4>
-            <p>Configurar cobros automáticos, membresías y señas.</p>
-          </div>
-
-          <!-- 3. Eventos y clases -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-calendar-check"></i>
-            <h4>Eventos y Clases</h4>
-            <p>
-              Agendá y organizá clases grupales, entrenamientos o eventos
-              especiales.
-            </p>
-          </div>
-
-          <!-- 4. Torneos y ligas -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-trophy"></i>
-            <h4>Torneos y Ligas</h4>
-            <p>Gesté torneos con inscripciones, resultados y rankings.</p>
-          </div>
-
-          <!-- 5. Ranking y estadísticas -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-chart-line"></i>
-            <h4>Ranking y Estadísticas</h4>
-            <p>
-              Seguimiento de rendimiento, participaciones y nivel de los
-              jugadores.
-            </p>
-          </div>
-
-          <!-- 6. Reportes financieros -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-file-invoice-dollar"></i>
-            <h4>Reportes Financieros</h4>
-            <p>
-              Historial de ingresos, egresos, rentabilidad e informes por día.
-            </p>
-          </div>
-
-          <!-- 7. Calendario de actividades del club -->
-          <div class="card-funcion">
-            <i class="fa-regular fa-calendar-days"></i>
-            <h4>Agenda del Club</h4>
-            <p>
-              Vista general de reservas, clases y eventos en un mismo lugar.
-            </p>
-          </div>
-
-          <!-- 8. Perfiles de jugadores -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-user-circle"></i>
-            <h4>Perfiles de Jugadores</h4>
-            <p>Historial de turnos, torneos y preferencias de cada jugador.</p>
-          </div>
-
-          <!-- 9. Membresías y renovaciones -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-id-card"></i>
-            <h4>Membresías</h4>
-            <p>Gestionar tipos de membresía y renovaciones automáticas.</p>
-          </div>
-
-          <!-- 10. Promociones y fidelización -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-gift"></i>
-            <h4>Promociones</h4>
-            <p>Descuentos, combos y beneficios por asistencia o torneos.</p>
-          </div>
-
-          <!-- 11. Notificaciones automáticas -->
-          <div class="card-funcion">
-            <i class="fa-solid fa-bell"></i>
-            <h4>Notificaciones</h4>
-            <p>
-              Envío automático de recordatorios y avisos por WhatsApp o mail.
-            </p>
-          </div>
+        <!-- FORMULARIO RESERVA -->
+        <div class="tarjeta-formulario">
+          <h2 id="titulo-formulario">Realizar reserva</h2>
+          <form id="form-reserva">
+            <div class="campo-formulario">
+              <label for="jugador">Jugador:</label>
+              <select id="jugador" required>
+                <option value="">Seleccionar jugador</option>
+              </select>
+            </div>
+            <div class="campo-formulario">
+              <label for="fecha">Fecha:</label>
+              <select id="fecha" required>
+                <option value="">Seleccionar fecha</option>
+              </select>
+            </div>
+            <div class="campo-formulario">
+              <label for="hora">Hora:</label>
+              <select id="hora" required>
+                <option value="">Seleccionar hora</option>
+              </select>
+            </div>
+            <div class="campo-formulario">
+              <label for="duracion">Duración:</label>
+              <select id="duracion" required>
+                <option value="">Seleccionar duración</option>
+              </select>
+            </div>
+            <div class="botones-formulario">
+              <button id="btn-jugador" type="submit" class="boton-guardar">
+                <i class="fa-solid fa-user-plus"></i> Guardar reserva
+              </button>
+            </div>
+            <p id="mensaje-error" class="mensaje" style="display: none"></p>
+          </form>
+        </div>
+        <!-- ESTADÍSTICAS DEL SISTEMA -->
+        <div class="tarjeta-listado" id="estadisticas">
+          <!-- Se completa dinámicamente con JS -->
         </div>
       </section>
-      <!-- BOTÓN FLOTANTE DE CONTACTO -->
-      <a
-        id="boton-contacto"
-        href="https://wa.me/5493510000000"
-        target="_blank"
-        class="boton-contacto"
-        aria-label="Contacto Renace Padel Club"
-      >
-        <i class="fa-brands fa-whatsapp"></i>
-      </a>
+
+      <!-- ==========================
+           COLUMNA DERECHA: Listados
+           ========================== -->
+      <section class="columna-listados">
+        <!-- JUGADORES REGISTRADOS -->
+        <div class="tarjeta-listado">
+          <h2>Jugadores registrados</h2>
+          <ul id="lista-jugadores"></ul>
+        </div>
+
+        <!-- RESERVAS REALIZADAS -->
+        <div class="tarjeta-listado">
+          <h2>Reservas realizadas</h2>
+          <label for="filtro-fecha">Filtrar por fecha:</label>
+          <select id="filtro-fecha">
+            <option value="">Todas las fechas</option>
+          </select>
+          <ul id="lista-reservas"></ul>
+        </div>
+      </section>
     </main>
 
+    <!-- ==========================
+         MODAL CONFIRMACIÓN
+         ========================== -->
     <div id="modal-confirmacion" class="modal hidden">
       <div class="modal-contenido">
-        <div id="detalle-confirmacion"></div>
+        <p id="modal-texto"></p>
         <div class="botones-accion">
-          <button id="btn-confirmar" class="boton-principal">Confirmar</button>
+          <button id="btn-confirmar" class="boton-principal">
+            Sí, confirmar
+          </button>
           <button id="btn-cancelar" class="boton-secundario">Cancelar</button>
-        </div>
-      </div>
-    </div>
-    <div id="modal-jugador" class="modal hidden">
-      <div class="modal-contenido">
-        <div id="detalle-jugador"></div>
-        <div class="botones-accion">
-          <button id="btn-confirmar-jugador" class="boton-principal">
-            Confirmar
-          </button>
-          <button id="btn-cancelar-jugador" class="boton-secundario">
-            Cancelar
-          </button>
         </div>
       </div>
     </div>
