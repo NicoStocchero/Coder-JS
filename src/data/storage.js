@@ -1,14 +1,11 @@
-import { mostrarJugadoresParaSeleccionar } from "../features/reservas/ui/mostrarJugadores.js";
+import { notificarError } from "../shared/ui/notificaciones.js";
 
 export const guardarEnLocalStorage = (clave, valor) => {
   try {
     localStorage.setItem(clave, JSON.stringify(valor));
   } catch (error) {
-    Swal.fire({
-      title: "Error",
-      text: "No se pudo guardar la información en el almacenamiento local.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+    notificarError({
+      mensaje: "No se pudo guardar la información en el almacenamiento local.",
     });
   }
 };
@@ -18,13 +15,9 @@ export const obtenerDeLocalStorage = (clave) => {
     const valor = localStorage.getItem(clave);
     return valor ? JSON.parse(valor) : null;
   } catch (error) {
-    Swal.fire({
-      title: "Error",
-      text: "No se pudo obtener la información del almacenamiento local.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+    notificarError({
+      mensaje: "No se pudo obtener la información del almacenamiento local.",
     });
-    return null;
   }
 };
 
@@ -32,11 +25,8 @@ export const eliminarDeLocalStorage = (clave) => {
   try {
     localStorage.removeItem(clave);
   } catch (error) {
-    Swal.fire({
-      title: "Error",
-      text: "No se pudo eliminar la información del almacenamiento local.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+    notificarError({
+      mensaje: "No se pudo eliminar la información del almacenamiento local.",
     });
   }
 };

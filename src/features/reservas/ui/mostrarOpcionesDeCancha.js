@@ -1,4 +1,5 @@
 import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
+import { $id, limpiarElemento, setValue } from "../../../shared/ui/dom.js";
 
 const datosCancha = {
   contenedorID: "canchas-disponibles",
@@ -8,8 +9,8 @@ const datosCancha = {
 };
 
 export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
-  const contenedor = document.getElementById(datosCancha.contenedorID);
-  contenedor.innerHTML = "";
+  const contenedor = $id(datosCancha.contenedorID);
+  limpiarElemento(contenedor);
 
   renderizarBotonesSeleccionables({
     items: opciones,
@@ -22,11 +23,7 @@ export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
       hora: opcion.hora,
       duracion: opcion.duracion,
     }),
-    alSeleccionar: (dataset) => {
-      const duracionSeleccionada = document.getElementById(
-        "duracion-seleccionada"
-      );
-      duracionSeleccionada.value = dataset.duracion;
-    },
+    alSeleccionar: (dataset) =>
+      setValue("duracion-seleccionada", dataset.duracion),
   });
 };

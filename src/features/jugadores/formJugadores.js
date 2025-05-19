@@ -3,13 +3,15 @@ import {
   mostrarErroresEnFormulario,
   limpiarErroresEnFormulario,
   normalizarFormulario,
-} from "../../helpers/manejoDeFormularios.js";
+} from "../../shared/ui/formulario.js";
 import { agregarJugadorEnLocalStorage } from "./data/gestionarJugadores.js"; // Importa la función para agregar jugadores al almacenamiento local
 import { mostrarJugadoresRegistrados } from "./ui/cargarJugadores.js";
 import { mostrarJugadoresParaSeleccionar } from "../reservas/ui/mostrarJugadores.js";
+import { $id } from "../../shared/ui/dom.js";
 
 export const formularioNuevoJugador = () => {
-  const form = document.getElementById("formulario-jugador");
+  const form = $id("formulario-jugador");
+  if (!form) return;
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();

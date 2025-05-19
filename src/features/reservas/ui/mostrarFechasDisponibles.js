@@ -1,5 +1,6 @@
 import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
 import { iniciarHorarios } from "../init/iniciarHorarios.js";
+import { limpiarContenedor } from "../../../shared/ui/dom.js";
 
 const datosFecha = {
   contenedorID: "fechas-disponibles",
@@ -12,8 +13,7 @@ const hoy = dayjs().format("YYYY-MM-DD"); // Obtiene la fecha de hoy en formato 
 const duracion = 60; // Duración por defecto de 60 minutos
 
 export const mostrarFechasDisponibles = (fechas) => {
-  const contenedorFechas = document.getElementById(datosFecha.contenedorID);
-  contenedorFechas.innerHTML = ""; // Limpia el contenedor antes de mostrar las fechas
+  limpiarContenedor(datosFecha.contenedorID);
 
   renderizarBotonesSeleccionables({
     items: fechas,
@@ -23,7 +23,7 @@ export const mostrarFechasDisponibles = (fechas) => {
     valorSeleccionado: hoy,
     alSeleccionar: (dataset) => {
       iniciarHorarios(dataset.fecha, duracion);
-      document.getElementById("canchas-disponibles").innerHTML = "";
+      limpiarContenedor("canchas-disponibles");
     },
   });
 };

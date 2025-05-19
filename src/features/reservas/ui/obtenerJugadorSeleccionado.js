@@ -1,5 +1,7 @@
+import { $id } from "../../../shared/ui/dom.js";
+
 export const obtenerJugadorSeleccionado = () => {
-  const selectJugador = document.getElementById("jugadores");
+  const selectJugador = $id("jugadores");
   return {
     idJugador: selectJugador?.value || "",
     nombreJugador:

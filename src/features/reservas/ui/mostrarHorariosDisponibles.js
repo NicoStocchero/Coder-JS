@@ -1,4 +1,5 @@
 import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
+import { limpiarContenedor } from "../../../shared/ui/dom.js";
 
 const datosHorario = {
   contenedorID: "horarios-disponibles",
@@ -8,8 +9,7 @@ const datosHorario = {
 };
 
 export const mostrarHorariosDisponibles = (horarios) => {
-  const contenedorHorarios = document.getElementById(datosHorario.contenedorID);
-  contenedorHorarios.innerHTML = ""; // Limpia el contenedor antes de mostrar los horarios
+  limpiarContenedor(datosHorario.contenedorID);
 
   renderizarBotonesSeleccionables({
     items: horarios,

@@ -1,5 +1,5 @@
 import { obtenerDeLocalStorage } from "../../../data/storage.js";
-import { obtenerTodasLasCanchasDisponibles } from "../../../data/canchas.js";
+import { obtenerTodasLasCanchasDisponibles } from "../data/canchas.js";
 import { generarHorariosDelDia } from "../../../helpers/fechas/generarHorariosDelDia.js";
 import { obtenerHorariosConCanchaDisponible } from "../logic/disponibilidad/obtenerHorariosConCanchaDisponible.js";
 import { mostrarHorariosDisponibles } from "../ui/mostrarHorariosDisponibles.js";

@@ -1,7 +1,8 @@
 import { obtenerDeLocalStorage } from "../../../../data/storage.js";
-import { obtenerTodasLasCanchasDisponibles } from "../../../../data/canchas.js";
+import { obtenerTodasLasCanchasDisponibles } from "../../data/canchas.js";
 import { mostrarOpcionesDeCancha } from "../../ui/mostrarOpcionesDeCancha.js";
 import { comprobarReservaDisponible } from "./comprobarReservaDisponible.js";
+import { notificarError } from "../../../../shared/ui/notificaciones.js";
 
 export const cargarCanchasParaHorario = async ({ fecha, hora }) => {
   try {
@@ -35,10 +36,6 @@ export const cargarCanchasParaHorario = async ({ fecha, hora }) => {
 
     mostrarOpcionesDeCancha({ canchas: combinacionesDisponibles });
   } catch (error) {
-    Swal.fire({
-      title: "Error inesperado",
-      text: "Ocurrió un problema al procesar las canchas disponibles.",
-      icon: "error",
-    });
+    notificarError({ mensaje: "Error al cargar las canchas disponibles." });
   }
 };

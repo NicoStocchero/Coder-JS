@@ -1,3 +1,6 @@
+import { $id, $qsa, limpiarContenedor } from "./dom.js";
+import { notificarError } from "./notificaciones.js";
+
 /* El parámetro `config` es un objeto que define cómo deben renderizarse los botones interactivos.
 
 Debe incluir las siguientes propiedades:
@@ -41,14 +44,15 @@ const config = {
 */
 
 const obtenerBotones = ({ contenedorID, claseBoton }) => {
-  const contenedor = document.getElementById(contenedorID);
-  const botones = contenedor.querySelectorAll(`.${claseBoton}`);
+  const contenedor = $id(contenedorID);
+  const botones = $qsa(`.${claseBoton}`, contenedor);
   return Array.from(botones);
 };
 
 const desmarcarBotones = (botones) => {
   for (const boton of botones) {
     boton.classList.remove("seleccionado");
+    boton.removeAttribute("aria-selected");
   }
 };
 
@@ -63,14 +67,13 @@ const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
 const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
   if (boton) {
     boton.classList.add("seleccionado");
-    const input = document.getElementById(inputID);
+    boton.setAttribute("aria-selected", "true");
+    const input = $id(inputID);
     if (input) {
       input.value = valorSeleccionado;
     } else {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `No se encontró el input con ID ${inputID}`,
+      notificarError({
+        mensaje: `No se encontró el input con ID ${inputID}.`,
       });
     }
   }
@@ -156,8 +159,8 @@ export const renderizarBotonesSeleccionables = (config) => {
   if (!config.contenedorID || !config.claseBoton) return;
   if (!config.items || config.items.length === 0) return;
 
-  const contenedor = document.getElementById(config.contenedorID);
-  contenedor.innerHTML = ""; // Limpia el contenedor antes de mostrar los botones
+  const contenedor = $id(config.contenedorID);
+  limpiarContenedor(contenedor);
 
   const botonesGenerados = [];
 

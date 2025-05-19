@@ -1,10 +1,11 @@
 import { iniciarHorariosPorDefecto } from "../init/iniciarHorarios.js";
+import { $id, limpiarInput, limpiarElemento } from "../../../shared/ui/dom.js";
 
 export const resetearFormularioReserva = () => {
-  document.getElementById("hora-seleccionada").value = "";
-  document.getElementById("cancha-seleccionada").value = "";
-  document.getElementById("duracion-seleccionada").value = "";
-  document.getElementById("canchas-disponibles").innerHTML = "";
+  limpiarInput("hora-seleccionada");
+  limpiarInput("cancha-seleccionada");
+  limpiarInput("duracion-seleccionada");
+  limpiarElemento($id("canchas-disponibles"));
 
   iniciarHorariosPorDefecto();
 };

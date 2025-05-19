@@ -2,6 +2,7 @@ import {
   obtenerDeLocalStorage,
   guardarEnLocalStorage,
 } from "../../../data/storage.js";
+import { notificarError } from "../../../shared/ui/notificaciones.js";
 
 // Aplicación de los métodos de almacenamiento local
 export const agregarJugadorEnLocalStorage = (jugador) => {
@@ -9,20 +10,16 @@ export const agregarJugadorEnLocalStorage = (jugador) => {
 
   // Comprobar si el email o el teléfono del jugador ya está registrado
   // Si ya existe, mostrar un mensaje de error y no agregar el jugador
-  if (jugadores.some((j) => j.email === jugador.email)) {
-    Swal.fire({
-      title: "Error",
-      text: "Ya existe un jugador con ese email.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+  if (jugadores.some((jugador) => jugador.email === jugador.email)) {
+    notificarError({
+      mensaje: "Ya existe un jugador con ese email.",
     });
     return;
-  } else if (jugadores.some((j) => j.telefono === jugador.telefono)) {
-    Swal.fire({
-      title: "Error",
-      text: "Ya existe un jugador con ese teléfono.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+  } else if (
+    jugadores.some((jugador) => jugador.telefono === jugador.telefono)
+  ) {
+    notificarError({
+      mensaje: "Ya existe un jugador con ese teléfono.",
     });
     return;
   }
@@ -44,11 +41,8 @@ export const eliminarJugadorDeLocalStorage = (id) => {
     guardarEnLocalStorage("jugadores", jugadoresActualizados);
     return jugadores.length !== jugadoresActualizados.length;
   } catch (error) {
-    Swal.fire({
-      title: "Error",
-      text: "No se pudo eliminar el jugador del almacenamiento local.",
-      icon: "error",
-      confirmButtonText: "Aceptar",
+    notificarError({
+      mensaje: "Error al eliminar el jugador. Intente nuevamente.",
     });
   }
 };

@@ -1,5 +1,7 @@
 import { crearIntervaloReserva } from "../../../helpers/fechas/crearIntervaloReserva.js";
 import { obtenerJugadorSeleccionado } from "../ui/obtenerJugadorSeleccionado.js";
+import { $id } from "../../../shared/ui/dom.js";
+import { notificarError } from "../../../shared/ui/notificaciones.js";
 
 export const obtenerDatosReserva = () => {
   const { idJugador, nombreJugador } = obtenerJugadorSeleccionado();
@@ -7,10 +9,10 @@ export const obtenerDatosReserva = () => {
   const reserva = {
     jugador: idJugador,
     nombre: nombreJugador,
-    fecha: document.getElementById("fecha-seleccionada")?.value || "",
-    hora: document.getElementById("hora-seleccionada")?.value || "",
-    duracion: document.getElementById("duracion-seleccionada")?.value || "",
-    cancha: document.getElementById("cancha-seleccionada")?.value || "",
+    fecha: $id("fecha-seleccionada")?.value || "",
+    hora: $id("hora-seleccionada")?.value || "",
+    duracion: $id("duracion-seleccionada")?.value || "",
+    cancha: $id("cancha-seleccionada")?.value || "",
   };
   return reserva;
 };
@@ -24,10 +26,9 @@ export const validarDatosReserva = (reserva) => {
   };
   for (const elemento in reserva) {
     if (!reserva[elemento]) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `Seleccione un${etiquetas[elemento] || elemento}.`,
+      notificarError({
+        titulo: "Error al confirmar la reserva",
+        mensaje: `Por favor, seleccione un ${etiquetas[elemento] || elemento}`,
       });
       return false;
     }

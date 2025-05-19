@@ -5,6 +5,7 @@ import {
 } from "./generarReservaCompleta.js";
 import { agregarReservaEnLocalStorage } from "../data/gestionarReservas.js";
 import { resetearFormularioReserva } from "./resetearReserva.js";
+import { notificarExito } from "../../../shared/ui/notificaciones.js";
 
 /* Orquesta el flujo completo de la reserva
 - Valida los datos de la reserva
@@ -23,9 +24,8 @@ export const confirmarReserva = async () => {
   const reservaCompleta = generarReservaCompleta(datosReserva);
   agregarReservaEnLocalStorage(reservaCompleta);
 
-  Swal.fire({
-    icon: "success",
-    title: "Reserva Confirmada",
+  notificarExito({
+    titulo: "Reserva Confirmada",
     html: `
       <p><strong>Jugador:</strong> ${reservaCompleta.nombre}</p>
       <p><strong>Fecha:</strong> ${dayjs(reservaCompleta.fecha)

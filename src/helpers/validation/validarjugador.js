@@ -3,7 +3,7 @@ import {
   validarEmail,
   validarTelefono,
   compruebaErrores,
-} from "../validaciones.js";
+} from "./validaciones.js";
 
 export const validarJugador = (datos) => {
   const { nombre, apellido, email, telefono } = datos;

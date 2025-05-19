@@ -3,7 +3,8 @@ import {
   normalizarNombrePropio,
   normalizarEmail,
   normalizarTelefono,
-} from "./validaciones.js";
+} from "../../helpers/validation/validaciones.js";
+import { $id, $qsa } from "./dom.js";
 
 export const normalizarFormulario = (formulario) => {
   const elementos = formulario.elements;
@@ -22,14 +23,14 @@ export const normalizarFormulario = (formulario) => {
 };
 
 export const limpiarErroresEnFormulario = (formulario) => {
-  formulario.querySelectorAll(".mensaje-error").forEach((errorElement) => {
+  $qsa(".mensaje-error", formulario).forEach((errorElement) => {
     errorElement.textContent = "";
   });
 };
 
 export const mostrarErroresEnFormulario = (errores) => {
   for (const campo in errores) {
-    const errorElement = document.getElementById(`error-${campo}`);
+    const errorElement = $id(`error-${campo}`);
     if (errorElement) {
       errorElement.textContent = errores[campo]; // Asigna el mensaje de error al elemento correspondiente (un <p> en el HTML)
     }
