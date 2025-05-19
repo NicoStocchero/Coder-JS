@@ -22,10 +22,12 @@ export const obtenerHorariosConCanchaDisponible = ({
     let disponibleEnAlgunaCancha = false;
 
     for (const cancha of canchasDisponibles) {
-      const reservasCanchas = reservasTotales.filter(
-        (reserva) =>
-          reserva.cancha === cancha && reserva.fecha === fechaSeleccionada
-      );
+      const reservasCanchas = reservasTotales.filter((reserva) => {
+        return (
+          reserva.cancha === cancha.nombre &&
+          reserva.fecha === fechaSeleccionada
+        ); // Filtra las reservas de la cancha actual para la fecha seleccionada
+      });
 
       const horariosFiltrados = filtrarHorariosDisponibles({
         horarios: [horario],

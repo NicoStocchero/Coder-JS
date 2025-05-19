@@ -58,6 +58,5 @@ export const filtrarHorariosDisponibles = ({
       }); // Si no está reservado, se agrega al resultado
     }
   }
-
   return horariosDisponibles;
 };

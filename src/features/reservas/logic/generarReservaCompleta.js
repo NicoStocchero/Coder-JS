@@ -1,8 +1,12 @@
 import { crearIntervaloReserva } from "../../../helpers/fechas/crearIntervaloReserva.js";
+import { obtenerJugadorSeleccionado } from "../ui/obtenerJugadorSeleccionado.js";
 
 export const obtenerDatosReserva = () => {
+  const { idJugador, nombreJugador } = obtenerJugadorSeleccionado();
+
   const reserva = {
-    jugador: document.getElementById("jugadores")?.value || "",
+    jugador: idJugador,
+    nombre: nombreJugador,
     fecha: document.getElementById("fecha-seleccionada")?.value || "",
     hora: document.getElementById("hora-seleccionada")?.value || "",
     duracion: document.getElementById("duracion-seleccionada")?.value || "",
@@ -13,20 +17,17 @@ export const obtenerDatosReserva = () => {
 
 export const validarDatosReserva = (reserva) => {
   const etiquetas = {
-    jugador: "Jugador",
-    fecha: "Fecha",
-    hora: "Hora",
-    duracion: "Duración",
-    cancha: "Cancha",
+    jugador: " Jugador",
+    fecha: "a Fecha",
+    hora: " Horario",
+    duracion: "a Cancha y su Duración",
   };
   for (const elemento in reserva) {
     if (!reserva[elemento]) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: `El campo ${
-          etiquetas[elemento] || elemento
-        } no puede estar vacío.`,
+        text: `Seleccione un${etiquetas[elemento] || elemento}.`,
       });
       return false;
     }
@@ -48,6 +49,7 @@ export const generarReservaCompleta = (reserva) => {
   const reservaCompleta = {
     id: reservaID,
     jugador: reserva.jugador,
+    nombre: reserva.nombre,
     fecha: reserva.fecha,
     hora: reserva.hora,
     duracion: duracion.trim(),

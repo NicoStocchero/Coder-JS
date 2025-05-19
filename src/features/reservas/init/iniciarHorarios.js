@@ -9,7 +9,7 @@ export const iniciarHorarios = async (fecha, duracion) => {
   const canchas = await obtenerTodasLasCanchasDisponibles();
   const horarios = generarHorariosDelDia();
 
-  const horariosFiltrados = await obtenerHorariosConCanchaDisponible({
+  const horariosFiltrados = obtenerHorariosConCanchaDisponible({
     horarios,
     fechaSeleccionada: fecha,
     duracionSeleccionada: duracion,
@@ -24,7 +24,7 @@ export const iniciarHorarios = async (fecha, duracion) => {
 
 export const iniciarHorariosPorDefecto = () => {
   const fecha = dayjs().format("YYYY-MM-DD");
-  const duracion = 90; // Duración por defecto de 90 minutos
+  const duracion = 60; // Duración por defecto de 60 minutos
 
   return iniciarHorarios(fecha, duracion);
 };

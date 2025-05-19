@@ -40,19 +40,19 @@ const config = {
 
 */
 
-export const obtenerBotones = ({ contenedorID, claseBoton }) => {
+const obtenerBotones = ({ contenedorID, claseBoton }) => {
   const contenedor = document.getElementById(contenedorID);
   const botones = contenedor.querySelectorAll(`.${claseBoton}`);
   return Array.from(botones);
 };
 
-export const desmarcarBotones = (botones) => {
+const desmarcarBotones = (botones) => {
   for (const boton of botones) {
     boton.classList.remove("seleccionado");
   }
 };
 
-export const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
+const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
   for (const boton of botones) {
     if (boton.dataset[datasetKey] === valorBuscado) {
       return boton;
@@ -60,7 +60,7 @@ export const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
   }
 };
 
-export const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
+const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
   if (boton) {
     boton.classList.add("seleccionado");
     const input = document.getElementById(inputID);
@@ -106,7 +106,7 @@ export const marcarBotonSeleccionado = (
 // Genera un botón HTML basado en un item y en las reglas definidas por el objeto config.
 // Aplica clases, dataset y texto dinámicamente según cada item.
 // Devuelve un botón listo para insertar en el DOM.
-export const crearBotonDesdeItem = (item, config) => {
+const crearBotonDesdeItem = (item, config) => {
   const boton = document.createElement("button");
   boton.classList.add(config.claseBoton);
   boton.dataset[config.datasetKey] = config.getValorDataset(item);
@@ -132,7 +132,7 @@ export const crearBotonDesdeItem = (item, config) => {
 
 // Asigna un evento click al botón para que dispare la lógica de selección general.
 // Esto actualiza la UI y el input oculto con el valor seleccionado.
-export const asignarEventoDeSeleccion = (boton, config, valorSeleccionado) => {
+const asignarEventoDeSeleccion = (boton, config, valorSeleccionado) => {
   boton.addEventListener("click", () => {
     marcarBotonSeleccionado(
       config.contenedorID,

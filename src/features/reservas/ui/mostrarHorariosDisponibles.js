@@ -11,19 +11,12 @@ export const mostrarHorariosDisponibles = (horarios) => {
   const contenedorHorarios = document.getElementById(datosHorario.contenedorID);
   contenedorHorarios.innerHTML = ""; // Limpia el contenedor antes de mostrar los horarios
 
-  const horariosFiltrados = horarios.filter((h) => h.disponible);
-
   renderizarBotonesSeleccionables({
-    items: horariosFiltrados,
+    items: horarios,
     ...datosHorario,
     getValorDataset: (horario) => horario.hora,
     getTexto: (horario) => horario.hora,
-    getClaseExtra: (horario) => {
-      if (horario.disponible) {
-        return "btn--disponible";
-      } else {
-        return "btn--no-disponible";
-      }
-    },
+    getClaseExtra: (horario) =>
+      horario.disponible ? "btn--disponible" : "btn--no-disponible",
   });
 };
