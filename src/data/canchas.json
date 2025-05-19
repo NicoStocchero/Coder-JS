@@ -1,0 +1,39 @@
+[
+  {
+    "id": 1,
+    "nombre": "Cancha 1",
+    "tipo": "abierta",
+    "superficie": "sintética",
+    "luz": true,
+    "mantenimiento": false,
+    "duracion": ["60", "90", "120"]
+  },
+  {
+    "id": 2,
+    "nombre": "Cancha 2",
+    "tipo": "abierta",
+    "superficie": "sintética",
+    "luz": true,
+    "mantenimiento": false,
+    "duracion": ["60", "90", "120"]
+  },
+
+  {
+    "id": 3,
+    "nombre": "Cancha 3",
+    "tipo": "abierta",
+    "superficie": "sintética",
+    "luz": true,
+    "mantenimiento": false,
+    "duracion": ["60", "90", "120"]
+  },
+  {
+    "id": 4,
+    "nombre": "Cancha 4",
+    "tipo": "abierta",
+    "superficie": "sintética",
+    "luz": true,
+    "mantenimiento": false,
+    "duracion": ["60", "90", "120"]
+  }
+]

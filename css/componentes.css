@@ -260,3 +260,39 @@ button i {
   gap: 1rem;
   margin-top: 1rem;
 }
+
+/* === BOTONES SELECCIONABLES (FECHAS, HORARIOS, DURACIÓN) === */
+.btn-fecha,
+.btn-horario,
+.btn-cancha {
+  background-color: var(--color-tarjeta);
+  border: 1px solid var(--color-linea);
+  color: var(--color-texto);
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  font-size: 0.92rem;
+  border-radius: 10px;
+  min-width: 90px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.btn-fecha:hover,
+.btn-horario:hover,
+.btn-cancha:hover {
+  background-color: color-mix(in srgb, var(--color-primario) 8%, white);
+  border-color: var(--color-primario);
+}
+
+.btn-fecha.seleccionado,
+.btn-horario.seleccionado,
+.btn-cancha.seleccionado {
+  background-color: var(--color-primario);
+  color: white;
+  border-color: var(--color-primario);
+}
+
+.btn--no-disponible {
+  opacity: 0.5;
+  pointer-events: none;
+}

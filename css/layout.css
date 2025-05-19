@@ -171,3 +171,24 @@ ul {
   background-color: var(--color-primario);
   border-radius: 2px;
 }
+
+.grid-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.5rem;
+}
+
+.grid-opciones button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.grid-opciones button.activo {
+  background-color: #2196f3;
+  color: white;
+  border-color: #2196f3;
+}
