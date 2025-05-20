@@ -1,5 +1,5 @@
-import { haySuperposicion } from "../../../../helpers/validation/haySuperposicion.js";
-import { crearIntervaloReserva } from "../../../../helpers/fechas/crearIntervaloReserva.js";
+import { haySuperposicion } from "../haySuperposicion.js";
+import { crearIntervaloReserva } from "../../../../shared/helpers/fechas/crearIntervaloReserva.js";
 
 /* Filtra los horarios disponibles según:
       - La fecha seleccionada

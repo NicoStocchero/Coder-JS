@@ -1,5 +1,9 @@
 import { iniciarHorariosPorDefecto } from "../init/iniciarHorarios.js";
-import { $id, limpiarInput, limpiarElemento } from "../../../shared/ui/dom.js";
+import {
+  $id,
+  limpiarInput,
+  limpiarElemento,
+} from "../../../shared/ui/helpers/dom.js";
 
 export const resetearFormularioReserva = () => {
   limpiarInput("hora-seleccionada");

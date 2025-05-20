@@ -1,5 +1,9 @@
-import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
-import { $id, limpiarElemento, setValue } from "../../../shared/ui/dom.js";
+import {
+  $id,
+  limpiarElemento,
+  setValue,
+  renderizarBotonesSeleccionables,
+} from "../../../shared/ui/index.js";
 
 const datosCancha = {
   contenedorID: "canchas-disponibles",

@@ -1,5 +1,11 @@
-import { $id, $qsa, limpiarContenedor } from "./dom.js";
-import { notificarError } from "./notificaciones.js";
+import {
+  $id,
+  $qsa,
+  limpiarContenedor,
+  notificarError,
+  crearBotonInteractivo,
+  limpiarElemento,
+} from "../index.js";
 
 /* El parámetro `config` es un objeto que define cómo deben renderizarse los botones interactivos.
 
@@ -110,25 +116,19 @@ export const marcarBotonSeleccionado = (
 // Aplica clases, dataset y texto dinámicamente según cada item.
 // Devuelve un botón listo para insertar en el DOM.
 const crearBotonDesdeItem = (item, config) => {
-  const boton = document.createElement("button");
-  boton.classList.add(config.claseBoton);
-  boton.dataset[config.datasetKey] = config.getValorDataset(item);
-  boton.textContent = config.getTexto(item);
-  boton.type = "button"; // Cambia el tipo de botón a "button" para evitar el envío del formulario
+  const dataset = {
+    [config.datasetKey]: config.getValorDataset(item),
+    ...(config.getDatasetExtra ? config.getDatasetExtra(item) : {}),
+  };
 
-  if (config.getClaseExtra) {
-    const claseExtra = config.getClaseExtra(item);
-    if (claseExtra) {
-      boton.classList.add(claseExtra);
-    }
-  }
+  const clasesExtra = config.getClaseExtra ? [config.getClaseExtra(item)] : [];
 
-  if (config.getDatasetExtra) {
-    const datasetExtra = config.getDatasetExtra(item);
-    for (const key in datasetExtra) {
-      boton.dataset[key] = datasetExtra[key];
-    }
-  }
+  const boton = crearBotonInteractivo({
+    texto: config.getTexto(item),
+    clase: config.claseBoton,
+    dataset,
+    clasesExtra,
+  });
 
   return boton;
 };
@@ -160,7 +160,7 @@ export const renderizarBotonesSeleccionables = (config) => {
   if (!config.items || config.items.length === 0) return;
 
   const contenedor = $id(config.contenedorID);
-  limpiarContenedor(contenedor);
+  limpiarElemento(contenedor);
 
   const botonesGenerados = [];
 

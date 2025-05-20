@@ -1,11 +1,9 @@
-import {
-  obtenerDatosReserva,
-  validarDatosReserva,
-  generarReservaCompleta,
-} from "./generarReservaCompleta.js";
+import { obtenerDatosReserva } from "../ui/obtenerDatosReserva.js";
+import { validarDatosReserva } from "../../../shared/validators/index.js";
+import { generarReservaCompleta } from "./generarReservaCompleta.js";
 import { agregarReservaEnLocalStorage } from "../data/gestionarReservas.js";
 import { resetearFormularioReserva } from "./resetearReserva.js";
-import { notificarExito } from "../../../shared/ui/notificaciones.js";
+import { notificarExito } from "../../../shared/ui/index.js";
 
 /* Orquesta el flujo completo de la reserva
 - Valida los datos de la reserva

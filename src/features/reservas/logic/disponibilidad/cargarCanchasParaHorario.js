@@ -2,7 +2,7 @@ import { obtenerDeLocalStorage } from "../../../../data/storage.js";
 import { obtenerTodasLasCanchasDisponibles } from "../../data/canchas.js";
 import { mostrarOpcionesDeCancha } from "../../ui/mostrarOpcionesDeCancha.js";
 import { comprobarReservaDisponible } from "./comprobarReservaDisponible.js";
-import { notificarError } from "../../../../shared/ui/notificaciones.js";
+import { notificarError } from "../../../../shared/ui/index.js";
 
 export const cargarCanchasParaHorario = async ({ fecha, hora }) => {
   try {

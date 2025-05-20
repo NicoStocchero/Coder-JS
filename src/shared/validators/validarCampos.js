@@ -1,22 +1,8 @@
-// Funciones para normalizar campos
-export const normalizarTexto = (texto) => {
-  return texto.trim().replace(/\s+/g, " ");
-}; // Elimina espacios en blanco al principio y al final, y reemplaza múltiples espacios por uno solo
-
-export const normalizarNombrePropio = (texto) => {
-  const textoLimpio = normalizarTexto(texto);
-  return textoLimpio
-    .toLowerCase()
-    .replace(/\b\w/g, (letra) => letra.toUpperCase());
-}; // Convierte la primera letra de cada palabra a mayúscula y el resto a minúscula
-
-export const normalizarEmail = (email) => {
-  return email.trim().toLowerCase();
-};
-
-export const normalizarTelefono = (telefono) => {
-  return telefono.replace(/\D/g, "");
-}; // Elimina todos los caracteres que no sean dígitos
+import {
+  normalizarTexto,
+  normalizarEmail,
+  normalizarTelefono,
+} from "./normalizadores.js";
 
 // Funciones de validación
 export const validarCampoTexto = (texto) => {
@@ -57,16 +43,3 @@ export const validarTelefono = (telefono) => {
   }
   return "";
 }; // Valida que el teléfono contenga exactamente 10 dígitos numéricos
-
-// Manejo de errores
-export const compruebaErrores = (errores) => {
-  for (const campo in errores) {
-    if (errores[campo] !== "") {
-      return true;
-    } // Devuelve true si alguno de los campos tiene un error
-  }
-  return false;
-};
-
-// Verifica si hay elementos en una lista
-export const hayElementos = (lista) => Array.isArray(lista) && lista.length > 0;

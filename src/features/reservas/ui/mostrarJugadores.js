@@ -1,6 +1,5 @@
 import { obtenerDeLocalStorage } from "../../../data/storage.js";
-import { $id } from "../../../shared/ui/dom.js";
-import { renderizarOpciones } from "../../../shared/ui/renderizarOpciones.js";
+import { $id, renderizarOpciones } from "../../../shared/ui/index.js";
 
 export const mostrarJugadoresParaSeleccionar = () => {
   const jugadores = obtenerDeLocalStorage("jugadores") || [];

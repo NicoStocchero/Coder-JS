@@ -1,42 +1,75 @@
 import { obtenerDeLocalStorage } from "../../../data/storage.js";
-import { manejarEventoEliminar } from "../../../shared/ui/botonEliminar.js";
+import {
+  crearBadge,
+  manejarEventoEliminar,
+  crearElementoConClase,
+  crearIcono,
+  crearParrafoConIcono,
+  crearMensajeVacio,
+  crearBotonInteractivo,
+  $id,
+  limpiarContenedor,
+  limpiarElemento,
+} from "../../../shared/ui/index.js";
 import { mostrarJugadoresParaSeleccionar } from "../../reservas/ui/mostrarJugadores.js";
-import { $id, limpiarContenedor } from "../../../shared/ui/dom.js";
-import { hayElementos } from "../../../helpers/validation/validaciones.js";
+import { hayElementos } from "../../../shared/helpers/listas.js";
 
 const contenedorID = "lista-jugadores";
-const mensajeVacio = `<p class="mensaje-vacio" aria-live="polite">No hay jugadores registrados.</p>`;
 
-// Genera el mensaje HTML para cada jugador
-const generarHTMLJugador = (jugador) => {
-  return `
-    <div class="card-body">
-      <div class="info-jugador">
-        <div class="header-jugador">
-          <i class="fa-solid fa-user icono-card"></i>
-          <h3 class="nombre-jugador">
-            ${jugador.nombre} ${jugador.apellido}
-            <span class="badge badge-activo">Activo</span>
-          </h3>
-        </div>
-        <p class="dato-icono">
-          <i class="fa-solid fa-envelope"></i>
-          <span>${jugador.email}</span>
-        </p>
-        <p class="dato-icono">
-          <i class="fa-solid fa-phone"></i>
-          <span>${jugador.telefono}</span>
-        </p>
-      </div>
-      <div class="acciones-jugador">
-        <button class="boton-secundario btn-editar-jugador" data-id="${jugador.id}">
-          <i class="fa-solid fa-pen"></i> Editar
-        </button>
-        <button class="boton-principal btn-eliminar" data-id="${jugador.id}">
-          <i class="fa-solid fa-trash"></i> Eliminar
-        </button>
-      </div>
-    </div>`;
+const crearContenidoJugador = (jugador) => {
+  const cardBody = crearElementoConClase("div", "card-body");
+
+  const infoJugador = crearElementoConClase("div", "info-jugador");
+  const headerJugador = crearElementoConClase("div", "header-jugador");
+
+  const iconoCard = crearIcono("fa-solid fa-user icono-card");
+
+  const nombreJugador = crearElementoConClase("h3", "nombre-jugador");
+  nombreJugador.append(`${jugador.nombre} ${jugador.apellido}`);
+
+  const badge = crearBadge({ texto: "Activo", clase: "badge-activo" });
+  nombreJugador.appendChild(badge);
+
+  headerJugador.appendChild(iconoCard);
+  headerJugador.appendChild(nombreJugador);
+  infoJugador.appendChild(headerJugador);
+
+  const datoIconoEmail = crearParrafoConIcono(
+    "fa-solid fa-envelope",
+    jugador.email
+  );
+  const datoIconoTelefono = crearParrafoConIcono(
+    "fa-solid fa-phone",
+    jugador.telefono
+  );
+
+  infoJugador.appendChild(datoIconoEmail);
+  infoJugador.appendChild(datoIconoTelefono);
+
+  const accionesJugador = crearElementoConClase("div", "acciones-jugador");
+
+  const botonEditar = crearBotonInteractivo({
+    clase: "boton-secundario",
+    clasesExtra: ["btn-editar-jugador"],
+    texto: "Editar",
+    dataset: { id: jugador.id },
+    icono: "fa-solid fa-pen",
+  });
+
+  const botonEliminar = crearBotonInteractivo({
+    clase: "boton-principal",
+    clasesExtra: ["btn-eliminar"],
+    texto: "Eliminar",
+    dataset: { id: jugador.id },
+    icono: "fa-solid fa-trash",
+  });
+
+  accionesJugador.appendChild(botonEditar);
+  accionesJugador.appendChild(botonEliminar);
+  cardBody.appendChild(infoJugador);
+  cardBody.appendChild(accionesJugador);
+
+  return cardBody; // Retorna el cardBody que contiene toda la información del jugador
 };
 
 // Función para crear una tarjeta de jugador
@@ -45,7 +78,7 @@ export const crearCardJugador = (jugador) => {
   div.classList.add("jugador");
   div.dataset.id = jugador.id; // Agregar el ID al div para poder identificarlo
 
-  div.innerHTML = generarHTMLJugador(jugador);
+  div.appendChild(crearContenidoJugador(jugador));
 
   return div;
 };
@@ -57,14 +90,15 @@ Muestra cards o un mensaje vacío si no hay jugadores.
 export const mostrarJugadoresRegistrados = () => {
   const jugadoresRegistrados = obtenerDeLocalStorage("jugadores");
   const contenedor = $id(contenedorID);
-  limpiarContenedor(contenedor);
+
+  limpiarElemento(contenedor);
 
   if (hayElementos(jugadoresRegistrados)) {
     jugadoresRegistrados.forEach((jugador) => {
-      contenedor.appendChild(crearCardJugador(jugador)); // Crear y agregar cada tarjeta de jugador al contenedor
+      contenedor.appendChild(crearCardJugador(jugador));
     });
   } else {
-    contenedor.innerHTML = mensajeVacio;
+    contenedor.appendChild(crearMensajeVacio("No hay jugadores registrados"));
   }
 };
 
@@ -76,8 +110,14 @@ export const manejarEventoEliminarJugadores = () => {
     "jugadores", // Tipo de registro
     "jugador", // Etiqueta para Swal
     () => {
-      mostrarJugadoresRegistrados();
-      mostrarJugadoresParaSeleccionar();
+      renderizarJugadores(); // Función para renderizar la lista de jugadores
     }
   );
+};
+
+export const renderizarJugadores = () => {
+  limpiarContenedor("lista-jugadores");
+
+  mostrarJugadoresRegistrados();
+  mostrarJugadoresParaSeleccionar();
 };

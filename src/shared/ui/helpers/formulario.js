@@ -3,7 +3,7 @@ import {
   normalizarNombrePropio,
   normalizarEmail,
   normalizarTelefono,
-} from "../../helpers/validation/validaciones.js";
+} from "../../../shared/validators/index.js";
 import { $id, $qsa } from "./dom.js";
 
 export const normalizarFormulario = (formulario) => {

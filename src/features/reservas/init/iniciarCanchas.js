@@ -1,5 +1,5 @@
 import { cargarCanchasParaHorario } from "../logic/disponibilidad/cargarCanchasParaHorario.js";
-import { $id } from "../../../shared/ui/dom.js";
+import { $id } from "../../../shared/ui/index.js";
 
 export const iniciarCanchas = async () => {
   const horarios = $id("horarios-disponibles");

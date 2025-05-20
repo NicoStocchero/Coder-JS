@@ -1,7 +1,7 @@
 import {
   guardarEnLocalStorage,
   obtenerDeLocalStorage,
-} from "../../data/storage.js";
+} from "../../../data/storage.js";
 import { notificarConfirmacion, notificarExito } from "./notificaciones.js";
 
 const eliminarRegistro = async (id, tipo, etiqueta, contenedor, funcion) => {

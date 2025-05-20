@@ -93,9 +93,7 @@ Desarrollado por **Nicolás Stocchero** como proyecto final para el curso de Jav
 
 ## 💬 Reflexión personal sobre el proceso
 
-...
-
-## 💡 ¿Por qué modularicé los botones?
+### 💡 ¿Por qué modularicé los botones?
 
 Tuve que repetir la misma lógica para fechas, horarios y canchas, y ya se me estaba volviendo un lío.  
 Lo separé en funciones como `crearBotonDesdeItem`, `asignarEventoDeSeleccion`, `marcarBotonSeleccionado`, etc.  
@@ -104,9 +102,7 @@ Todas usan un `config` que define qué mostrar y cómo.
 Hice esta atomización porque me di cuenta de que estaba repitiendo pequeñas partes del código.  
 Al principio había armado una sola función que hacía todo junto, pero no entendía dónde estaba el error, así que rehice todo en funciones chicas para poder debuggear mejor.
 
----
-
-## 📘 Lección aprendida
+### 📘 Lección aprendida
 
 Aprendí a **modularizar**: separar la lógica en funciones pequeñas, reutilizables y fáciles de testear.  
 Me sirvió para detectar errores más rápido, entender mejor el flujo de mi app y evitar repetir código en fechas, horarios y canchas.

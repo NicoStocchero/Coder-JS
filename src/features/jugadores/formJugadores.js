@@ -1,13 +1,13 @@
-import { validarJugador } from "../../helpers/validation/validarjugador.js"; // Importa la función de validación de jugadores
+import { validarJugador } from "../../shared/validators/index.js";
 import {
   mostrarErroresEnFormulario,
   limpiarErroresEnFormulario,
   normalizarFormulario,
-} from "../../shared/ui/formulario.js";
+  $id,
+  notificarExito,
+} from "../../shared/ui/index.js";
 import { agregarJugadorEnLocalStorage } from "./data/gestionarJugadores.js"; // Importa la función para agregar jugadores al almacenamiento local
-import { mostrarJugadoresRegistrados } from "./ui/cargarJugadores.js";
-import { mostrarJugadoresParaSeleccionar } from "../reservas/ui/mostrarJugadores.js";
-import { $id } from "../../shared/ui/dom.js";
+import { renderizarJugadores } from "./ui/cargarJugadores.js";
 
 export const formularioNuevoJugador = () => {
   const form = $id("formulario-jugador");
@@ -25,18 +25,15 @@ export const formularioNuevoJugador = () => {
       const fueGuardadoEnLocalStorage = agregarJugadorEnLocalStorage(datos); // Comprueba si se guardó correctamente en localStorage (no permite duplicados)
       limpiarErroresEnFormulario(form);
       if (fueGuardadoEnLocalStorage) {
-        Swal.fire({
-          title: "Jugador creado con éxito",
+        notificarExito({
+          titulo: "Jugador creado con éxito",
           html: `
-            <b>Nombre:</b> ${datos.nombre} ${datos.apellido}<br>
-            <b>Email:</b> ${datos.email}<br>
-            <b>Teléfono:</b> ${datos.telefono}
+          <b>Nombre:</b> ${datos.nombre} ${datos.apellido}<br>
+          <b>Email:</b> ${datos.email}<br>
+          <b>Teléfono:</b> ${datos.telefono}
         `,
-          icon: "success",
-          confirmButtonText: "Aceptar",
         });
-        mostrarJugadoresRegistrados(); // Actualizar la lista de jugadores registrados
-        mostrarJugadoresParaSeleccionar(); // Actualizar la lista de jugadores para seleccionar
+        renderizarJugadores(); // Renderiza la lista de jugadores
         form.reset(); // Limpiar el formulario
       }
     } else {

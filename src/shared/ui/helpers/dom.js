@@ -1,15 +1,16 @@
+// Se utilizan $id, $qs y $qsa para seleccionar elementos del DOM de una manera más sencilla y fácil de implementar.
 export const $id = (id) => document.getElementById(id);
 export const $qs = (sel) => document.querySelector(sel);
 export const $qsa = (sel) => document.querySelectorAll(sel);
 
 export const getValue = (id) => {
-  const el = $id(id);
-  return el ? el.value.trim() : "";
+  const elemento = $id(id);
+  return elemento ? elemento.value.trim() : "";
 };
 
 export const setValue = (id, valor) => {
-  const el = $id(id);
-  if (el) el.value = valor;
+  const elemento = $id(id);
+  if (elemento) elemento.value = valor;
 };
 
 export const addClass = (id, clase) => $id(id)?.classList.add(clase);
@@ -27,7 +28,9 @@ export const limpiarInput = (id) => {
 
 export const limpiarContenedor = (id) => {
   const contenedor = $id(id);
-  if (contenedor) {
-    contenedor.innerHTML = "";
+  if (!(contenedor instanceof HTMLElement)) {
+    throw new Error(`El elemento con ID ${id} no es un contenedor válido.`);
   }
+
+  contenedor.innerHTML = "";
 };

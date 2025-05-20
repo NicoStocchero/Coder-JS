@@ -1,4 +1,4 @@
-import { limpiarElemento } from "./dom.js";
+import { limpiarElemento } from "../helpers/dom.js";
 
 export const renderizarOpciones = ({
   elemento,

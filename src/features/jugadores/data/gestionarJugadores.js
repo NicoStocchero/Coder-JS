@@ -2,7 +2,7 @@ import {
   obtenerDeLocalStorage,
   guardarEnLocalStorage,
 } from "../../../data/storage.js";
-import { notificarError } from "../../../shared/ui/notificaciones.js";
+import { notificarError } from "../../../shared/ui/index.js";
 
 // Aplicación de los métodos de almacenamiento local
 export const agregarJugadorEnLocalStorage = (jugador) => {
@@ -10,14 +10,12 @@ export const agregarJugadorEnLocalStorage = (jugador) => {
 
   // Comprobar si el email o el teléfono del jugador ya está registrado
   // Si ya existe, mostrar un mensaje de error y no agregar el jugador
-  if (jugadores.some((jugador) => jugador.email === jugador.email)) {
+  if (jugadores.some((j) => j.email === jugador.email)) {
     notificarError({
       mensaje: "Ya existe un jugador con ese email.",
     });
     return;
-  } else if (
-    jugadores.some((jugador) => jugador.telefono === jugador.telefono)
-  ) {
+  } else if (jugadores.some((j) => j.telefono === jugador.telefono)) {
     notificarError({
       mensaje: "Ya existe un jugador con ese teléfono.",
     });

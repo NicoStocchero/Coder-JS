@@ -1,5 +1,7 @@
-import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
-import { limpiarContenedor } from "../../../shared/ui/dom.js";
+import {
+  renderizarBotonesSeleccionables,
+  limpiarContenedor,
+} from "../../../shared/ui/index.js";
 
 const datosHorario = {
   contenedorID: "horarios-disponibles",

@@ -1,6 +1,6 @@
 // Importaciones de reservas
 import { mostrarJugadoresParaSeleccionar } from "../ui/mostrarJugadores.js";
-import { generarFechasDisponibles } from "../../../helpers/fechas/generarFechasDisponibles.js";
+import { generarFechasDisponibles } from "../../../shared/helpers/fechas/generarFechasDisponibles.js";
 import { mostrarFechasDisponibles } from "../ui/mostrarFechasDisponibles.js";
 import { iniciarHorariosPorDefecto } from "./iniciarHorarios.js";
 import { iniciarCanchas } from "./iniciarCanchas.js";

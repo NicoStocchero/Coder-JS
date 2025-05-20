@@ -1,4 +1,4 @@
-import { $id } from "../../../shared/ui/dom.js";
+import { $id } from "../../../shared/ui/helpers/dom.js";
 
 export const obtenerJugadorSeleccionado = () => {
   const selectJugador = $id("jugadores");

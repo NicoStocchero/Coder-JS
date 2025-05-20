@@ -1,4 +1,4 @@
-import { notificarError } from "../shared/ui/notificaciones.js";
+import { notificarError } from "../shared/ui/handlers/notificaciones.js";
 
 export const guardarEnLocalStorage = (clave, valor) => {
   try {

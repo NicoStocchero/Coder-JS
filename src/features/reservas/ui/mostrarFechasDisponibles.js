@@ -1,6 +1,8 @@
-import { renderizarBotonesSeleccionables } from "../../../shared/ui/botones.js";
+import {
+  renderizarBotonesSeleccionables,
+  limpiarContenedor,
+} from "../../../shared/ui/index.js";
 import { iniciarHorarios } from "../init/iniciarHorarios.js";
-import { limpiarContenedor } from "../../../shared/ui/dom.js";
 
 const datosFecha = {
   contenedorID: "fechas-disponibles",

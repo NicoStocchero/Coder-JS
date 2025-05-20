@@ -1,5 +1,5 @@
-import { crearIntervaloReserva } from "../../../../helpers/fechas/crearIntervaloReserva.js";
-import { haySuperposicion } from "../../../../helpers/validation/haySuperposicion.js";
+import { crearIntervaloReserva } from "../../../../shared/helpers/fechas/crearIntervaloReserva.js";
+import { haySuperposicion } from "../haySuperposicion.js";
 
 export const comprobarReservaDisponible = ({
   cancha,
