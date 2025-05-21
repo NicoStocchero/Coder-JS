@@ -12,15 +12,23 @@ import { notificarExito } from "../../../shared/ui/index.js";
 - Muestra un mensaje de éxito
 */
 
-export const confirmarReserva = async () => {
+export const confirmarReserva = async ({
+  modoEdicion = false,
+  idAnterior = null,
+}) => {
   const datosReserva = obtenerDatosReserva();
 
   if (validarDatosReserva(datosReserva) === false) {
     return;
   }
 
-  const reservaCompleta = generarReservaCompleta(datosReserva);
-  agregarReservaEnLocalStorage(reservaCompleta);
+  let reservaCompleta = generarReservaCompleta(datosReserva);
+
+  if (modoEdicion && idAnterior) {
+    actualizarReservaEnLocalStorage(idAnterior, reservaCompleta);
+  } else {
+    agregarReservaEnLocalStorage(reservaCompleta);
+  }
 
   notificarExito({
     titulo: "Reserva Confirmada",
@@ -37,4 +45,6 @@ export const confirmarReserva = async () => {
   });
 
   resetearFormularioReserva();
+
+  return true;
 };

@@ -22,7 +22,7 @@ const eliminarRegistro = async (id, tipo, etiqueta, contenedor, funcion) => {
     }
     notificarExito({
       titulo: "Eliminado",
-      mensaje: `${etiqueta} eliminado con éxito`,
+      mensaje: `${etiqueta} se ha eliminado con éxito`,
     });
     if (typeof funcion === "function") {
       // Se ejecuta solo si es una función. Evita errores si no se pasa una función

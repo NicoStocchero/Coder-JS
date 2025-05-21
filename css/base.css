@@ -1,24 +1,50 @@
-/* =======================================
-   BASE - ESTILOS GENERALES Y RESETEO
-   ======================================= */
-
 :root {
-  --color-primario: #ff6f3c;
+  /* Colores principales */
+  --color-primario: #ff6b3c;
   --color-secundario: #2d2e32;
   --color-acento: #ffb894;
   --color-exito: #27ae60;
-  --color-error: #c0392b;
+  --color-error: #ff4e4e;
+
+  /* Fondo y superficie */
   --color-fondo: #f4f4f4;
+  --color-fondo-base: #f9f9f9;
   --color-tarjeta: #ffffff;
-  --color-texto: #111;
-  --color-muted: #666;
   --color-linea: #e0e0e0;
 
-  --sombra-suave: 0 2px 6px rgba(0, 0, 0, 0.05);
+  /* Tipografía */
+  --color-texto: #1a1a1a;
+  --color-texto-principal: #1a1a1a;
+  --color-muted: #6a6a6a;
+  --color-deshabilitado: #bdbdbd;
+
+  /* Sombras */
+  --sombra-suave: 0 0 0 0 transparent;
   --sombra-tarjeta: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  --fuente-principal: "Futura PT", "Segoe UI", "Roboto", sans-serif;
+  /* Tipografía variables */
+  --font-seccion-titulo: "Inter", sans-serif;
+  --font-weight-bold: 700;
+  --font-weight-regular: 400;
+
+  --font-size-base: 14px;
+  --font-size-pequeño: 12px;
+  --font-titulo-pantalla: 24px;
+  --font-titulo-seccion: 20px;
+  --font-titulo-subseccion: 16px;
+
+  --line-height-titulo: 32px;
+  --line-height-seccion: 28px;
+  --line-height-subseccion: 24px;
+
+  /* Medidas base */
+  --radius-grande: 16px;
+  --alto-boton: 64px;
 }
+
+/* ============================
+   RESET BÁSICO
+============================ */
 
 * {
   margin: 0;
@@ -26,15 +52,24 @@
   box-sizing: border-box;
 }
 
+html,
 body {
-  font-family: var(--fuente-principal);
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-seccion-titulo);
   font-size: 16px;
-  line-height: 1.6;
-  color: var(--color-texto);
+  line-height: 1.5;
+  color: var(--color-texto-principal);
   background-color: var(--color-fondo);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ============================
+   ENCABEZADOS RESETEADOS
+============================ */
 
 h1,
 h2,
@@ -42,27 +77,47 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 700;
-  color: var(--color-texto);
+  font-family: var(--font-seccion-titulo);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-texto-principal);
+  line-height: 1.3;
+  margin: 0;
 }
 
+/* Nivel de jerarquía visual */
 h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  font-size: var(--font-titulo-pantalla);
+  line-height: var(--line-height-titulo);
+  margin-bottom: 1.25rem;
 }
 
 h2 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  font-size: var(--font-titulo-seccion);
+  line-height: var(--line-height-seccion);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-size: var(--font-titulo-subseccion);
+  line-height: var(--line-height-subseccion);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ============================
+   TEXTOS GENERALES
+============================ */
+
+p {
+  margin-bottom: 0.75rem;
+  font-size: var(--font-size-base);
 }
 
 ul {
   list-style: none;
   padding: 0;
-}
-
-p {
-  margin-bottom: 0.5rem;
+  margin: 0;
 }
 
 a {
@@ -74,25 +129,58 @@ a:hover {
   text-decoration: underline;
 }
 
+/* ============================
+   FORMULARIOS
+============================ */
+
 input,
 select,
 textarea,
 button {
   font-family: inherit;
   font-size: 1rem;
+  color: var(--color-texto-principal);
   outline: none;
+  border: none;
+  background: none;
 }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-linea);
+  border-radius: var(--radius-grande);
+  padding: 0.75rem 1rem;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+/* ============================
+   IMÁGENES
+============================ */
 
 img {
   max-width: 100%;
   display: block;
 }
 
+/* ============================
+   BOTONES
+============================ */
+
 button {
   cursor: pointer;
   border: none;
   background: none;
+  font-family: inherit;
 }
+
+/* ============================
+   SEPARADOR
+============================ */
 
 hr {
   border: 0;

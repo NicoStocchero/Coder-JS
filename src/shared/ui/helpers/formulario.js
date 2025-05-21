@@ -36,3 +36,25 @@ export const mostrarErroresEnFormulario = (errores) => {
     }
   }
 };
+
+export const inicializarFormulario = (formID, validar, guardar, renderizar) => {
+  const form = $id(formID);
+  if (!form) return;
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    normalizarFormulario(form);
+    const datos = Object.fromEntries(new FormData(form).entries());
+    const errores = validar(datos);
+    if (errores.valido) {
+      if (guardar(datos)) {
+        limpiarErroresEnFormulario(form);
+        notificarExito({ titulo: "Éxito", mensaje: "Guardado correctamente" });
+        renderizar();
+        form.reset();
+      }
+    } else {
+      limpiarErroresEnFormulario(form);
+      mostrarErroresEnFormulario(errores.errores);
+    }
+  });
+};

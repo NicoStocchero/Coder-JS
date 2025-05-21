@@ -20,7 +20,10 @@ export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
     items: opciones,
     ...datosCancha,
     getValorDataset: (opcion) => `${opcion.cancha}-${opcion.duracion}`,
-    getTexto: (opcion) => `${opcion.cancha} (${opcion.duracion} min)`,
+    getTexto: (opcion) => `
+  <span class="texto-cancha-nombre">${opcion.cancha}</span>
+  <span class="texto-cancha-duracion">${opcion.duracion} min</span>
+`,
     getDatasetExtra: (opcion) => ({
       valor: `${opcion.cancha}-${opcion.duracion}`, // Para que coincida con el valor del dataset (sino generaba conflicto)
       fecha: opcion.fecha,

@@ -1,36 +1,79 @@
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <!-- Básico para que el navegador entienda todo bien desde el arranque -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RESERVAS DE PADEL</title>
-    <!-- ICONOS -->
+
+    <!-- Título visible en la pestaña + usado por buscadores -->
+    <title>Renace Padel Club - Reservas</title>
+
+    <!-- Preconexión a recursos externos para acelerar carga (CDNs) -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+
+    <!-- Estilos externos primero (iconos), luego los nuestros -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
-    <!-- CSS -->
     <link rel="stylesheet" href="../css/styles.css" />
-    <!-- Librerías -->
-    <!-- Librería para manejar fechas -->
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/es.js"></script>
-    <!-- Librería de validaciones de formularios -->
-    <script src="https://cdn.jsdelivr.net/npm/validator@13.7.0/validator.min.js"></script>
-    <!-- Librería para mostrar modales -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- Ejecución del script principal -->
+
+    <!-- Libs JS externas (todas con defer para no bloquear el render) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/es.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/validator@13.7.0/validator.min.js"
+      defer
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+
+    <!-- Nuestro entrypoint, con module para poder usar imports -->
     <script type="module" defer src="../js/main.js"></script>
+
+    <!-- Un poco de SEO básico + Open Graph por si se comparte el link -->
+    <meta
+      name="description"
+      content="Sistema de reservas para clubes de pádel. Gestión simple y profesional."
+    />
+    <meta name="author" content="Nico Stocchero" />
+
+    <meta property="og:title" content="Renace Padel Club" />
+    <meta
+      property="og:description"
+      content="Gestioná turnos y reservas sin complicaciones."
+    />
+    <meta
+      property="og:image"
+      content="https://renacepadelclub.com/og-image.jpg"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+
+    <link rel="icon" href="/favicon.ico" />
   </head>
 
   <body>
-    <header>
-      <h1>RESERVAS DE PADEL</h1>
+    <header class="header-principal">
+      <div class="logo-club">
+        <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+        Renace Padel Club
+      </div>
+      <nav class="nav-principal">
+        <a href="jugadores.html" class="nav-item activo">Jugadores</a>
+        <a href="reservas.html" class="nav-item">Reservas</a>
+      </nav>
     </header>
 
     <main>
       <section class="formulario">
-        <h2>Formulario de Jugador</h2>
+        <h1>Formulario de Jugador</h1>
         <form id="formulario-jugador">
           <div class="form-group">
             <label for="nombre">Nombre:</label>
@@ -56,66 +99,102 @@
         </form>
       </section>
 
-      <section class="formulario">
-        <h2>Formulario de Reserva</h2>
-        <form id="formulario-reserva">
-          <!-- Select clásico para jugador -->
-          <select
-            title="Selecciona un jugador"
-            id="jugadores"
-            class="select-jugadores"
-          >
-            <option value="" disabled selected>Selecciona un jugador</option>
-          </select>
+      <div class="reservas">
+        <h2>Reservas</h2>
+        <button id="btn-reservas" class="boton-principal">Reservar</button>
+      </div>
 
-          <!-- Contenedor visual de fechas -->
-          <div class="campo">
-            <label for="fecha-seleccionada">Selecciona una fecha:</label>
-            <div id="fechas-disponibles" class="grid-opciones"></div>
-            <input
-              type="hidden"
-              id="fecha-seleccionada"
-              name="fecha-seleccionada"
-            />
-          </div>
+      <div id="slider-reserva" class="slider-reserva oculto">
+        <section class="formulario">
+          <h1 id="titulo-formulario" class="titulo-pantalla">
+            Formulario de Reserva
+          </h1>
+          <form id="formulario-reserva">
+            <!-- Select clásico para jugador -->
+            <div class="campo">
+              <label for="jugadores" class="titulo-seccion">Selecciona un jugador</label>
+              <select
+                title="Selecciona un jugador"
+                id="jugadores"
+                class="select-jugadores"
+              >
+                <option value="" disabled selected>Selecciona un jugador</option>
+              </select>
+            </div>
 
-          <!-- Contenedor visual de horarios -->
-          <div class="campo">
-            <label for="horario-seleccionado">Selecciona un horario:</label>
-            <div id="horarios-disponibles" class="grid-opciones"></div>
-            <input
-              type="hidden"
-              id="hora-seleccionada"
-              name="hora-seleccionada"
-            />
-          </div>
+            <!-- Contenedor visual de fechas -->
+            <div class="campo">
+              <h2 for="fecha-seleccionada" class="titulo-seccion"
+                >Selecciona una fecha</h2
+              >
+              <div
+                id="fechas-disponibles"
+                class="grid-opciones opciones-fechas"
+              ></div>
+              <input
+                type="hidden"
+                id="fecha-seleccionada"
+                name="fecha-seleccionada"
+              />
+            </div>
 
-          <!-- Contenedor visual de duración -->
-          <div class="campo">
-            <label for="cancha-seleccionada">Selecciona una cancha:</label>
-            <div id="canchas-disponibles" class="grid-opciones"></div>
-            <input
-              type="hidden"
-              id="cancha-seleccionada"
-              name="cancha-seleccionada"
-            />
-            <input
-              type="hidden"
-              id="duracion-seleccionada"
-              name="duracion-seleccionada"
-            />
-          </div>
+            <!-- Contenedor visual de horarios -->
+            <div class="campo">
+              <h2 class="titulo-seccion" for="horario-seleccionado">Selecciona un horario</h2>
+              </h2>
+              <div
+                id="horarios-disponibles"
+                class="grid-opciones opciones-horarios"
+              ></div>
+              <input
+                type="hidden"
+                id="hora-seleccionada"
+                name="hora-seleccionada"
+              />
+            </div>
 
-          <button type="submit" class="boton-principal">
-            Confirmar reserva
-          </button>
-        </form>
-      </section>
+            <!-- Contenedor visual de duración -->
+            <div class="campo">
+              <h2 for="cancha-seleccionada" class="titulo-seccion"
+                >Selecciona una cancha</h2
+              >
+              <div
+                id="canchas-disponibles"
+                class="grid-opciones opciones-canchas"
+              ></div>
+              <input
+                type="hidden"
+                id="cancha-seleccionada"
+                name="cancha-seleccionada"
+              />
+              <input
+                type="hidden"
+                id="duracion-seleccionada"
+                name="duracion-seleccionada"
+              />
+            </div>
+
+            <button type="submit" class="boton-principal btn-confirmar-reserva">
+              Confirmar reserva
+            </button>
+          </form>
+        </section>
+      </div>
 
       <section class="jugadores">
         <h2>Jugadores Registrados</h2>
         <div id="lista-jugadores" class="contenedor-jugadores"></div>
       </section>
+
+      <section class="reservas">
+        <h2>Reservas Realizadas</h2>
+        <div id="lista-reservas" class="contenedor-reservas"></div>
+      </section>
     </main>
+
+    <footer class="footer-principal">
+      <p>&copy; 2025 Renace Padel Club. Todos los derechos reservados.</p>
+      <p class="creditos">Desarrollado por Nicolás Stocchero</p>
+    </footer>
   </body>
 </html>

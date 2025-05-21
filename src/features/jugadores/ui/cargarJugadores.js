@@ -10,6 +10,7 @@ import {
   $id,
   limpiarContenedor,
   limpiarElemento,
+  renderizarLista,
 } from "../../../shared/ui/index.js";
 import { mostrarJugadoresParaSeleccionar } from "../../reservas/ui/mostrarJugadores.js";
 import { hayElementos } from "../../../shared/helpers/listas.js";
@@ -91,15 +92,7 @@ export const mostrarJugadoresRegistrados = () => {
   const jugadoresRegistrados = obtenerDeLocalStorage("jugadores");
   const contenedor = $id(contenedorID);
 
-  limpiarElemento(contenedor);
-
-  if (hayElementos(jugadoresRegistrados)) {
-    jugadoresRegistrados.forEach((jugador) => {
-      contenedor.appendChild(crearCardJugador(jugador));
-    });
-  } else {
-    contenedor.appendChild(crearMensajeVacio("No hay jugadores registrados"));
-  }
+  renderizarLista(jugadoresRegistrados, contenedor, crearCardJugador);
 };
 
 // Función para manejar el evento de eliminar jugadores
@@ -117,7 +110,6 @@ export const manejarEventoEliminarJugadores = () => {
 
 export const renderizarJugadores = () => {
   limpiarContenedor("lista-jugadores");
-
   mostrarJugadoresRegistrados();
   mostrarJugadoresParaSeleccionar();
 };

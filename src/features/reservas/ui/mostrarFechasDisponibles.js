@@ -21,7 +21,16 @@ export const mostrarFechasDisponibles = (fechas) => {
     items: fechas,
     ...datosFecha,
     getValorDataset: (fecha) => fecha.fecha,
-    getTexto: (fecha) => dayjs(fecha.fecha).locale("es").format("ddd D MMMM"),
+    getTexto: (fecha) => {
+      const fechaDayjs = dayjs(fecha.fecha).locale("es");
+      const dia = fechaDayjs.format("ddd"); // ej: "mié."
+      const numero = fechaDayjs.format("D"); // ej: "21"
+
+      return `
+        <span class="texto-dia">${dia}</span>
+        <span class="texto-numero">${numero}</span>
+      `;
+    },
     valorSeleccionado: hoy,
     alSeleccionar: (dataset) => {
       iniciarHorarios(dataset.fecha, duracion);

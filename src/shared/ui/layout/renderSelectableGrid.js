@@ -128,6 +128,7 @@ const crearBotonDesdeItem = (item, config) => {
     clase: config.claseBoton,
     dataset,
     clasesExtra,
+    usarHTML: true,
   });
 
   return boton;
