@@ -27,7 +27,11 @@ export const manejarEventoEditar = ({
     if (!botonEditar) return;
 
     const id = botonEditar.dataset.id;
-    const { registro } = editarRegistro(id, tipo);
+
+    const resultado = editarRegistro(id, tipo);
+    if (!resultado) return;
+
+    const { registro } = resultado;
     if (!registro) return;
 
     funcion(id, tipo, etiqueta, registro);

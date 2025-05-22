@@ -2,10 +2,14 @@ import { confirmarReserva } from "../logic/confirmarReserva.js";
 import { $id } from "../../../shared/ui/index.js";
 import { cerrarSliderReserva } from "./components/abrirSliderReservas.js";
 
-// Estado global del formulario de reserva
 export const estadoFormularioReserva = {
   modoEdicion: false,
   idReservaEditando: null,
+};
+
+export const resetearEstadoEdicion = () => {
+  estadoFormularioReserva.modoEdicion = false;
+  estadoFormularioReserva.idReservaEditando = null;
 };
 
 // Actualiza el texto del botón según si se está editando o creando
@@ -17,13 +21,6 @@ export const actualizarTextoBoton = () => {
   } else {
     boton.textContent = "Confirmar reserva";
   }
-};
-
-// Reinicia el estado del formulario una vez confirmada o cancelada la acción
-export const resetearEstadoEdicion = () => {
-  estadoFormularioReserva.modoEdicion = false;
-  estadoFormularioReserva.idReservaEditando = null;
-  actualizarTextoBoton();
 };
 
 // Inicializa el formulario de nueva reserva

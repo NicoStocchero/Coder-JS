@@ -40,6 +40,7 @@ const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
     const input = $id(inputID);
     if (input) {
       input.value = valorSeleccionado;
+      input.dispatchEvent(new Event("change"));
     } else {
       notificarError({
         mensaje: `No se encontró el input con ID ${inputID}.`,
@@ -67,7 +68,6 @@ export const marcarBotonSeleccionado = (
 
   if (botonASeleccionar) {
     aplicarSeleccion(botonASeleccionar, inputID, valorSeleccionado);
-    botonASeleccionar.click(); // Dispara efectos secundarios como duración
   }
 };
 
@@ -132,24 +132,24 @@ export const renderizarBotonesSeleccionables = (config) => {
       config.valorSeleccionado
     );
     if (botonASeleccionar) {
-      botonASeleccionar.click(); // Ejecuta selección inicial
+      for (const boton of botonesGenerados) {
+        if (
+          config.valorSeleccionado &&
+          boton.dataset[config.datasetKey] === config.valorSeleccionado
+        ) {
+          boton.classList.add("seleccionado");
+          boton.setAttribute("aria-selected", "true");
+        }
+      }
+      aplicarSeleccion(
+        botonASeleccionar,
+        config.inputID,
+        config.valorSeleccionado
+      );
+
+      if (typeof config.alSeleccionar === "function") {
+        config.alSeleccionar(botonASeleccionar.dataset);
+      }
     }
   }
-};
-
-// Permite marcar un botón manualmente desde otra función
-export const obtenerDatosBotones = ({
-  contenedorID,
-  claseBoton,
-  inputID,
-  datasetKey,
-  valorSeleccionado,
-}) => {
-  marcarBotonSeleccionado(
-    contenedorID,
-    claseBoton,
-    inputID,
-    datasetKey,
-    valorSeleccionado
-  );
 };

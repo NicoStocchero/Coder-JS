@@ -1,8 +1,7 @@
-// Importaciones de reservas
+// Importaciones base
 import { mostrarJugadoresParaSeleccionar } from "../ui/components/mostrarJugadores.js";
 import { generarFechasDisponibles } from "../../../shared/helpers/fechas/generarFechasDisponibles.js";
 import { mostrarFechasDisponibles } from "../ui/components/mostrarFechasDisponibles.js";
-import { iniciarHorariosPorDefecto } from "./iniciarHorarios.js";
 import { iniciarCanchas } from "./iniciarCanchas.js";
 import { formularioNuevaReserva } from "../ui/formReservas.js";
 import {
@@ -11,26 +10,32 @@ import {
 } from "../ui/components/card/mostrarReservas.js";
 import { iniciarSliderReserva } from "../ui/components/abrirSliderReservas.js";
 import { iniciarEdicionReserva } from "./iniciarEdicionReserva.js";
+import { FormController } from "../logic/class/FormController.js";
 
-// Inicializa el módulo de reservas:
-// - Renderiza los componentes
-// - Asocia los eventos
+// Instanciación global del controlador
+export const formController = new FormController();
+
 export const initReservas = () => {
-  iniciarSliderReserva(); // Abre el formulario desde el botón flotante
+  iniciarSliderReserva();
+  formularioNuevaReserva();
+  iniciarCanchas();
 
-  formularioNuevaReserva(); // Maneja envío del formulario de nueva reserva
+  // 🔹 Configuración inicial
+  const fechaHoy = dayjs().format("YYYY-MM-DD");
+  const fechas = generarFechasDisponibles();
 
-  iniciarCanchas(); // Inicializa el listado de canchas
+  formController.reserva.fecha = fechaHoy;
+  formController.reserva.duracion = 60;
 
-  mostrarFechasDisponibles(generarFechasDisponibles()); // Muestra fechas disponibles
+  // 🔹 Mostrar fechas y simular selección
+  mostrarFechasDisponibles(fechas, fechaHoy);
 
-  iniciarHorariosPorDefecto(); // Muestra los horarios del día actual
+  // 🔹 Resto del flujo
+  mostrarJugadoresParaSeleccionar();
+  mostrarReservasRegistradas();
+  iniciarEdicionReserva();
+  manejarEventoEliminarReservas();
 
-  mostrarJugadoresParaSeleccionar(); // Carga los jugadores para elegir
-
-  mostrarReservasRegistradas(); // Muestra las reservas ya guardadas
-
-  iniciarEdicionReserva(); // Asocia evento de edición a cada tarjeta
-
-  manejarEventoEliminarReservas(); // Asocia evento de eliminación a cada tarjeta
+  // 🔹 Render inicial (puede disparar horarios/canchas si fecha+duración ya están)
+  formController.renderFormulario();
 };

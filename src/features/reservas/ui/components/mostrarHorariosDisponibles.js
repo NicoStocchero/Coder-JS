@@ -2,6 +2,8 @@ import {
   renderizarBotonesSeleccionables,
   limpiarContenedor,
 } from "../../../../shared/ui/index.js";
+import { formController } from "../../init/init.js";
+import { cargarCanchasParaHorario } from "../../../reservas/logic/disponibilidad/cargarCanchasParaHorario.js";
 
 const datosHorario = {
   contenedorID: "horarios-disponibles",
@@ -18,9 +20,14 @@ export const mostrarHorariosDisponibles = (horarios) => {
   renderizarBotonesSeleccionables({
     items: horarios,
     ...datosHorario,
+    valorSeleccionado: formController.reserva.hora,
     getValorDataset: (horario) => horario.hora,
     getTexto: (horario) => horario.hora,
     getClaseExtra: (horario) =>
       horario.disponible ? "btn--disponible" : "btn--no-disponible",
+    alSeleccionar: (dataset) => {
+      formController.reserva.hora = dataset.hora; // Actualiza la hora en el formulario
+      cargarCanchasParaHorario(formController.reserva.fecha, dataset.hora); // más directo
+    },
   });
 };

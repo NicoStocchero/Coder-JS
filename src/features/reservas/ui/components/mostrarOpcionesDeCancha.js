@@ -3,7 +3,9 @@ import {
   limpiarElemento,
   setValue,
   renderizarBotonesSeleccionables,
+  marcarBotonSeleccionado,
 } from "../../../../shared/ui/index.js";
+import { formController } from "../../init/init.js";
 
 const datosCancha = {
   contenedorID: "canchas-disponibles",
@@ -21,6 +23,7 @@ export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
   renderizarBotonesSeleccionables({
     items: opciones,
     ...datosCancha,
+    valorSeleccionado: formController.reserva.canchaSeleccionada,
     getValorDataset: (opcion) => `${opcion.cancha}-${opcion.duracion}`,
     getTexto: (opcion) => `
       <span class="texto-cancha-nombre">${opcion.cancha}</span>
@@ -31,8 +34,15 @@ export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
       fecha: opcion.fecha,
       hora: opcion.hora,
       duracion: opcion.duracion,
+      cancha: opcion.cancha,
     }),
-    alSeleccionar: (dataset) =>
-      setValue("duracion-seleccionada", dataset.duracion), // Actualiza el input oculto
+    alSeleccionar: (dataset) => {
+      formController.reserva.duracion = dataset.duracion; // Actualiza la duración en el formulario
+      formController.reserva.cancha = dataset.cancha; // Actualiza la cancha en el formulario
+      formController.reserva.canchaSeleccionada = `${dataset.cancha}-${dataset.duracion}`;
+
+      setValue("cancha-seleccionada", `${dataset.cancha}-${dataset.duracion}`);
+      setValue("duracion-seleccionada", dataset.duracion);
+    },
   });
 };
