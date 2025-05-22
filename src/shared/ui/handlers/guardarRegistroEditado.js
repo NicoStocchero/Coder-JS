@@ -4,12 +4,14 @@ import {
 } from "../../../data/storage.js";
 import { notificarError } from "./notificaciones.js";
 
+// Guarda un registro editado si no hay duplicados por email o teléfono
 export const guardarRegistroEditado = (tipo, id, registroEditado) => {
   const registros = obtenerDeLocalStorage(tipo) || [];
 
   const index = registros.findIndex((item) => item.id === id);
-  if (index === -1) return false;
+  if (index === -1) return false; // No se encontró el registro original
 
+  // Verifica si hay otro registro con mismo email o teléfono
   const repetido = registros.some(
     (item) =>
       item.id !== id &&
@@ -24,6 +26,7 @@ export const guardarRegistroEditado = (tipo, id, registroEditado) => {
     return false;
   }
 
+  // Reemplaza el registro editado en la lista
   const registrosActualizados = registros.map((registro) =>
     registro.id === id ? { ...registro, ...registroEditado } : registro
   );

@@ -1,3 +1,4 @@
+// Muestra una notificación de éxito
 export const notificarExito = ({ titulo, mensaje, html }) => {
   Swal.fire({
     icon: "success",
@@ -8,6 +9,7 @@ export const notificarExito = ({ titulo, mensaje, html }) => {
   });
 };
 
+// Muestra una notificación de error
 export const notificarError = ({ titulo = "", mensaje = "" }) => {
   Swal.fire({
     icon: "error",
@@ -16,6 +18,7 @@ export const notificarError = ({ titulo = "", mensaje = "" }) => {
   });
 };
 
+// Muestra una confirmación con botones y devuelve true si se acepta
 export const notificarConfirmacion = async ({
   titulo,
   mensaje,

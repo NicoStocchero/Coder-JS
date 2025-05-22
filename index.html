@@ -99,10 +99,10 @@
         </form>
       </section>
 
-      <div class="reservas">
+      <section class="reservas">
         <h2>Reservas</h2>
         <button id="btn-reservas" class="boton-principal">Reservar</button>
-      </div>
+      </section>
 
       <div id="slider-reserva" class="slider-reserva oculto">
         <section class="formulario">
@@ -110,23 +110,9 @@
             Formulario de Reserva
           </h1>
           <form id="formulario-reserva">
-            <!-- Select clásico para jugador -->
-            <div class="campo">
-              <label for="jugadores" class="titulo-seccion">Selecciona un jugador</label>
-              <select
-                title="Selecciona un jugador"
-                id="jugadores"
-                class="select-jugadores"
-              >
-                <option value="" disabled selected>Selecciona un jugador</option>
-              </select>
-            </div>
-
             <!-- Contenedor visual de fechas -->
             <div class="campo">
-              <h2 for="fecha-seleccionada" class="titulo-seccion"
-                >Selecciona una fecha</h2
-              >
+              <h2 for="fecha-seleccionada" class="titulo-seccion">Fecha</h2>
               <div
                 id="fechas-disponibles"
                 class="grid-opciones opciones-fechas"
@@ -138,10 +124,23 @@
               />
             </div>
 
+            <!-- Select clásico para jugador -->
+            <div class="campo">
+              <label for="jugadores" class="titulo-seccion">Jugador</label>
+              <select
+                title="Selecciona un jugador"
+                id="jugadores"
+                class="select-jugadores"
+              >
+                <option value="" disabled selected>
+                  Selecciona un jugador
+                </option>
+              </select>
+            </div>
+
             <!-- Contenedor visual de horarios -->
             <div class="campo">
-              <h2 class="titulo-seccion" for="horario-seleccionado">Selecciona un horario</h2>
-              </h2>
+              <h2 class="titulo-seccion" for="horario-seleccionado">Horario</h2>
               <div
                 id="horarios-disponibles"
                 class="grid-opciones opciones-horarios"
@@ -155,9 +154,7 @@
 
             <!-- Contenedor visual de duración -->
             <div class="campo">
-              <h2 for="cancha-seleccionada" class="titulo-seccion"
-                >Selecciona una cancha</h2
-              >
+              <h2 for="cancha-seleccionada" class="titulo-seccion">Cancha</h2>
               <div
                 id="canchas-disponibles"
                 class="grid-opciones opciones-canchas"

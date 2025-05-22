@@ -1,5 +1,7 @@
 import { limpiarElemento } from "../helpers/dom.js";
 
+// Rellena un <select> con opciones dinámicas
+// Muestra una opción por defecto al principio
 export const renderizarOpciones = ({
   elemento,
   datos,
@@ -7,7 +9,7 @@ export const renderizarOpciones = ({
   getValor,
   defaultText = "Seleccionar una opción",
 }) => {
-  limpiarElemento(elemento);
+  limpiarElemento(elemento); // Limpia el select antes de renderizar
 
   const opcionDefault = document.createElement("option");
   opcionDefault.value = "";

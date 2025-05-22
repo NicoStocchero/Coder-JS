@@ -1,21 +1,18 @@
-/* Esta función genera un array de horarios disponibles para el día actual
- Los horarios son cada 30 minutos desde las 8:00 AM hasta las 11:00 PM
- Cada horario tiene una propiedad "disponible" que indica si está disponible o no
-*/
+// Genera los horarios del día en bloques de 30 minutos, desde 8:00 hasta 23:00
+// Cada horario incluye la hora formateada y una marca de disponibilidad
 export const generarHorariosDelDia = () => {
   const horarios = [];
 
-  let horaInicio = dayjs().startOf("day").hour(8); // Hora de inicio a las 8:00 AM
-  const horaFin = dayjs().startOf("day").hour(23); // Hora de fin a las 11:00 PM
+  let horaInicio = dayjs().startOf("day").hour(8); // Comienza a las 8:00 AM
+  const horaFin = dayjs().startOf("day").hour(23); // Termina a las 11:00 PM
 
   while (horaInicio.isBefore(horaFin)) {
     const horaFormateada = horaInicio.format("HH:mm");
-    let disponible = true; // Se asume que inicalmente está disponible
     horarios.push({
       hora: horaFormateada,
-      disponible: disponible,
+      disponible: true, // Por defecto se marca como disponible
     });
-    horaInicio = horaInicio.add(30, "minute"); // Sumar 30 minutos
+    horaInicio = horaInicio.add(30, "minute"); // Avanza en bloques de 30 min
   }
 
   return horarios;

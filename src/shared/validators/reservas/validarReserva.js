@@ -1,6 +1,8 @@
 import { compruebaErrores } from "../../validators/index.js";
 import { notificarError } from "../../ui/index.js";
 
+// Valida que la reserva tenga todos los campos requeridos
+// Muestra notificación si falta algún dato esencial
 export const validarDatosReserva = (reserva) => {
   const errores = {
     jugador: reserva.jugador ? "" : "Debe seleccionar un jugador.",

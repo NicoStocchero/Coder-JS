@@ -1,7 +1,7 @@
 import {
   renderizarBotonesSeleccionables,
   limpiarContenedor,
-} from "../../../shared/ui/index.js";
+} from "../../../../shared/ui/index.js";
 
 const datosHorario = {
   contenedorID: "horarios-disponibles",
@@ -10,6 +10,8 @@ const datosHorario = {
   datasetKey: "hora",
 };
 
+// Muestra los botones de horarios disponibles
+// Aplica clase según disponibilidad visual (verde/rojo)
 export const mostrarHorariosDisponibles = (horarios) => {
   limpiarContenedor(datosHorario.contenedorID);
 

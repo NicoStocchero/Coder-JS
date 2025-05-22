@@ -1,5 +1,6 @@
 import { crearIcono } from "./icons.js";
 
+// Crea un párrafo con un ícono y texto al lado, usando clase "dato-icono"
 export const crearParrafoConIcono = (iconoClases, texto) => {
   const p = document.createElement("p");
   p.classList.add("dato-icono");

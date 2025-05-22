@@ -1,7 +1,10 @@
 import { obtenerDatosReserva } from "../ui/obtenerDatosReserva.js";
 import { validarDatosReserva } from "../../../shared/validators/index.js";
 import { generarReservaCompleta } from "./generarReservaCompleta.js";
-import { agregarReservaEnLocalStorage } from "../data/gestionarReservas.js";
+import {
+  agregarReservaEnLocalStorage,
+  actualizarReservaEnLocalStorage,
+} from "../data/gestionarReservas.js";
 import { resetearFormularioReserva } from "./resetearReserva.js";
 import { notificarExito } from "../../../shared/ui/index.js";
 
@@ -25,6 +28,7 @@ export const confirmarReserva = async ({
   let reservaCompleta = generarReservaCompleta(datosReserva);
 
   if (modoEdicion && idAnterior) {
+    reservaCompleta.id = idAnterior;
     actualizarReservaEnLocalStorage(idAnterior, reservaCompleta);
   } else {
     agregarReservaEnLocalStorage(reservaCompleta);

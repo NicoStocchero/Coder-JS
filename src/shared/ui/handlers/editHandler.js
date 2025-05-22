@@ -1,14 +1,16 @@
 import { obtenerDeLocalStorage } from "../../../data/storage.js";
 
+// Busca un registro por su ID en localStorage y lo devuelve
 export const editarRegistro = (id, tipo) => {
-  const registros = obtenerDeLocalStorage(tipo); // Obtiene todos los registros del tipo especificado
-  const registro = registros.find((item) => item.id === id); // Busca el registro a editar por su id
-
+  const registros = obtenerDeLocalStorage(tipo);
+  const registro = registros.find((item) => item.id === id);
   if (!registro) return;
 
-  return { registro }; // Devuelve el registro encontrado
+  return { registro };
 };
 
+// Escucha clics sobre botones de edición en un contenedor
+// Llama a la función de edición si encuentra el registro
 export const manejarEventoEditar = ({
   contenedor,
   tipo,

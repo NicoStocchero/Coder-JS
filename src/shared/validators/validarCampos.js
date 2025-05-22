@@ -4,7 +4,7 @@ import {
   normalizarTelefono,
 } from "./normalizadores.js";
 
-// Funciones de validación
+// Valida campos de texto (nombre, apellido, etc.)
 export const validarCampoTexto = (texto) => {
   const textoLimpio = normalizarTexto(texto);
 
@@ -17,9 +17,11 @@ export const validarCampoTexto = (texto) => {
   if (textoLimpio.length < 3 || textoLimpio.length > 100) {
     return "El campo debe tener entre 3 y 100 caracteres";
   }
-  return "";
-}; // Valida que el campo no esté vacío, contenga solo letras y espacios, y tenga entre 3 y 100 caracteres
 
+  return "";
+};
+
+// Valida campos de email
 export const validarEmail = (email) => {
   const emailLimpio = normalizarEmail(email);
 
@@ -32,14 +34,17 @@ export const validarEmail = (email) => {
   if (emailLimpio.length > 100) {
     return "El email no puede tener más de 100 caracteres";
   }
-  return "";
-}; // Valida que el email no esté vacío, sea un email válido y no tenga más de 100 caracteres
 
+  return "";
+};
+
+// Valida teléfonos de 10 dígitos numéricos
 export const validarTelefono = (telefono) => {
   const telefonoLimpio = normalizarTelefono(telefono);
 
   if (!/^\d{10}$/.test(telefonoLimpio)) {
     return "El teléfono debe contener exactamente 10 dígitos numéricos";
   }
+
   return "";
-}; // Valida que el teléfono contenga exactamente 10 dígitos numéricos
+};

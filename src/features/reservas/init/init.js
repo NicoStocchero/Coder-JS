@@ -1,60 +1,36 @@
 // Importaciones de reservas
-import { mostrarJugadoresParaSeleccionar } from "../ui/mostrarJugadores.js";
+import { mostrarJugadoresParaSeleccionar } from "../ui/components/mostrarJugadores.js";
 import { generarFechasDisponibles } from "../../../shared/helpers/fechas/generarFechasDisponibles.js";
-import { mostrarFechasDisponibles } from "../ui/mostrarFechasDisponibles.js";
+import { mostrarFechasDisponibles } from "../ui/components/mostrarFechasDisponibles.js";
 import { iniciarHorariosPorDefecto } from "./iniciarHorarios.js";
 import { iniciarCanchas } from "./iniciarCanchas.js";
 import { formularioNuevaReserva } from "../ui/formReservas.js";
 import {
   mostrarReservasRegistradas,
   manejarEventoEliminarReservas,
-} from "../ui/mostrarReservas.js";
-import {
-  $id,
-  manejarEventoEditar,
-  manejarEventoEliminar,
-} from "../../../shared/ui/index.js";
-import { mostrarModalEditarReserva } from "../ui/mostrarModalEditarReserva.js";
-import { iniciarSliderReserva } from "../ui/abrirSliderReservas.js";
+} from "../ui/components/card/mostrarReservas.js";
+import { iniciarSliderReserva } from "../ui/components/abrirSliderReservas.js";
+import { iniciarEdicionReserva } from "./iniciarEdicionReserva.js";
 
-/**
- * Inicializa el módulo de reservas:
- * - Renderiza jugadores, fechas, horarios y canchas
- * - Asocia eventos y ejecuta el formulario
- */
-
-// Formulario de Reservas
+// Inicializa el módulo de reservas:
+// - Renderiza los componentes
+// - Asocia los eventos
 export const initReservas = () => {
-  iniciarSliderReserva();
+  iniciarSliderReserva(); // Abre el formulario desde el botón flotante
 
-  // Inicializar el formulario de reservas
-  formularioNuevaReserva();
+  formularioNuevaReserva(); // Maneja envío del formulario de nueva reserva
 
-  // Inicializar canchas
-  iniciarCanchas();
+  iniciarCanchas(); // Inicializa el listado de canchas
 
-  // Inicializar fechas disponibles
-  const fechasDisponibles = generarFechasDisponibles();
-  mostrarFechasDisponibles(fechasDisponibles);
+  mostrarFechasDisponibles(generarFechasDisponibles()); // Muestra fechas disponibles
 
-  // Inicializar horarios por defecto
-  iniciarHorariosPorDefecto();
+  iniciarHorariosPorDefecto(); // Muestra los horarios del día actual
 
-  // Mostrar jugadores para seleccionar
-  mostrarJugadoresParaSeleccionar();
+  mostrarJugadoresParaSeleccionar(); // Carga los jugadores para elegir
 
-  // Mostrar reservas registradas
-  mostrarReservasRegistradas();
+  mostrarReservasRegistradas(); // Muestra las reservas ya guardadas
 
-  // Manejar evento editar reservas
-  manejarEventoEditar({
-    contenedor: $id("lista-reservas"),
-    tipo: "reservas",
-    etiqueta: "reserva",
-    selector: ".btn-editar-reserva",
-    funcion: mostrarModalEditarReserva,
-  });
+  iniciarEdicionReserva(); // Asocia evento de edición a cada tarjeta
 
-  // Manejar evento eliminar reservas
-  manejarEventoEliminarReservas();
+  manejarEventoEliminarReservas(); // Asocia evento de eliminación a cada tarjeta
 };

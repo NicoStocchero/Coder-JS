@@ -2,7 +2,7 @@ Este proyecto es una aplicación modular desarrollada con JavaScript puro, orien
 
 ## 📌 Objetivo
 
-Simular el flujo completo de un sistema de reservas con alta interactividad, validaciones, almacenamiento local y experiencia de usuario optimizada.
+Simular el flujo completo de un sistema de reservas con UX clara, validaciones y almacenamiento persistente en localStorage.
 
 ---
 
@@ -11,28 +11,24 @@ Simular el flujo completo de un sistema de reservas con alta interactividad, val
 El código sigue una arquitectura modular basada en features (`jugadores`, `reservas`) con separación clara entre responsabilidades:
 
 src/
-├── features/
+├── features/ # Módulos funcionales (jugadores, reservas)
 │ ├── jugadores/
 │ │ ├── data/ # Acceso a localStorage
-│ │ ├── ui/ # Render de cards, formularios y eventos
-│ │ └── initJugadores.js
-│ ├── reservas/
-│ │ ├── data/
-│ │ ├── ui/
-│ │ ├── logic/
-│ │ ├── init/
-│ │ └── initReservas.js
-├── helpers/
-│ ├── fechas/ # Cálculos de disponibilidad, rangos, etc.
-│ ├── validation/ # Validaciones lógicas (no visuales)
+│ │ ├── logic/ # Lógica de validación y guardado
+│ │ └── ui/ # Formulario y renderizado
+│ └── reservas/
+│ ├── data/
+│ ├── init/ # Inicialización del módulo
+│ ├── logic/ # Lógica general
+│ │ └── disponibilidad/ # Verificación de horarios y canchas
+│ └── ui/ # Componentes visuales de reservas
 ├── shared/
-│ └── ui/ # Funciones visuales reutilizables (DOM, alertas, selects)
-├── data/ # Datos estáticos compartidos (ej: canchas.json)
-└── main.js # Punto de entrada y orquestación
-
-yaml
-Copy
-Edit
+│ ├── helpers/ # Funciones comunes (listas, fechas)
+│ └── ui/ # Helpers de UI, DOM, botones, mensajes
+├── validators/ # Validadores de campos, normalización y errores
+├── data/ # Datos compartidos (si se simulan externos)
+├── index.html # Página principal
+└── README.md # Documentación del proyecto
 
 ---
 
@@ -79,7 +75,7 @@ Edit
 
 1. Cloná o descargá el repositorio.
 2. Abrí `index.html` en tu navegador.
-3. El sistema se inicializa automáticamente desde `main.js`:
+3. El sistema se inicializa automáticamente desde `js/main.js`:
    - Módulo Jugadores
    - Módulo Reservas
 
@@ -91,20 +87,44 @@ Desarrollado por **Nicolás Stocchero** como proyecto final para el curso de Jav
 
 ---
 
-## 💬 Reflexión personal sobre el proceso
+## 💬 Reflexión personal sobre el desarrollo
 
-### 💡 ¿Por qué modularicé los botones?
+### 💡 Decisiones clave
 
-Tuve que repetir la misma lógica para fechas, horarios y canchas, y ya se me estaba volviendo un lío.  
-Lo separé en funciones como `crearBotonDesdeItem`, `asignarEventoDeSeleccion`, `marcarBotonSeleccionado`, etc.  
-Todas usan un `config` que define qué mostrar y cómo.
+Noté que estaba repitiendo la misma lógica para fechas, horarios y canchas. Eso me llevó a modularizar toda la lógica de botones interactivos en funciones como `crearBotonDesdeItem`, `asignarEventoDeSeleccion`, `marcarBotonSeleccionado`, etc., que funcionan mediante un objeto `config`.  
+Este patrón me permitió desacoplar completamente la UI de cada módulo, simplificar el mantenimiento y reutilizar componentes sin duplicar código.
 
-Hice esta atomización porque me di cuenta de que estaba repitiendo pequeñas partes del código.  
-Al principio había armado una sola función que hacía todo junto, pero no entendía dónde estaba el error, así que rehice todo en funciones chicas para poder debuggear mejor.
+También reorganicé el proyecto por **features y capas (UI, lógica, datos)**, inspirándome en principios de Clean Architecture para frontend.
 
-### 📘 Lección aprendida
+---
 
-Aprendí a **modularizar**: separar la lógica en funciones pequeñas, reutilizables y fáciles de testear.  
-Me sirvió para detectar errores más rápido, entender mejor el flujo de mi app y evitar repetir código en fechas, horarios y canchas.
+### 🧠 Lo que aprendí
 
-También aprendí que **no todos los bugs están en el JS**: a veces el problema es visual, como me pasó con una clase mal escrita en el CSS que me llevó 5 horas frente a la pantalla detectar.
+- La importancia de **modularizar y abstraer patrones repetidos**
+- Cómo **refactorizar sin romper** el flujo de la app
+- A manejar el **estado del formulario** (modo edición vs. creación) de forma centralizada
+- Que a veces los bugs no están en el código, sino en el DOM o el CSS mal aplicado
+
+---
+
+### ⚙️ Mejoras implementadas
+
+- Eliminé cualquier dependencia de `innerHTML`, `console.log` o `alert`, usando `createElement`, notificaciones visuales (`SweetAlert2`) y helpers personalizados
+- Validación completa del formulario (estructura, campos requeridos, solapamiento de horarios)
+- Uso de `dayjs`, `validator.js`, `localStorage` y otras utilidades para lógica de negocio simulada
+- Separación de responsabilidades en módulos reutilizables (`shared/`, `validators/`, `features/`)
+
+---
+
+### 🧭 Sobre la edición de reservas
+
+Sé que la lógica de edición puede parecer extensa, pero está dividida paso a paso:
+
+- Se precargan los datos en los inputs (`setValue`)
+- Se renderiza la UI reactiva igual que si se estuviera creando una reserva
+- Se controla el estado con `modoEdicion` y se actualiza localStorage
+
+Preferí separar cada parte antes que meter todo en una única función.  
+Esto me ayudó a mantener la lógica clara y evitar errores en la sincronización del formulario.
+
+---

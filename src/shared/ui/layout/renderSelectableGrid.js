@@ -7,54 +7,14 @@ import {
   limpiarElemento,
 } from "../index.js";
 
-/* El parámetro `config` es un objeto que define cómo deben renderizarse los botones interactivos.
-
-Debe incluir las siguientes propiedades:
-- contenedorID: ID del contenedor donde se insertarán los botones.
-- claseBoton: Clase CSS base que se aplicará a cada botón.
-- inputID: ID del input oculto donde se guardará el valor seleccionado.
-- datasetKey: Clave del dataset principal que identifica cada botón (ej: "fecha", "jugador").
-
-- items: Array de elementos base a transformar en botones.
-- getValorDataset: Función que toma un elemento y devuelve el valor a asignar al dataset principal.
-- getTexto: Función que toma un elemento y devuelve el texto visible del botón.
-
-Opcionales:
-- getClaseExtra: Función que devuelve una clase adicional (por disponibilidad, estado, etc.). Util para mostrar si está disponible o no.
-- getDatasetExtra: Función que devuelve un objeto con más atributos `data-*` para el botón. Util para los botones de cancha por ejemplo.
-- valorSeleccionado: Valor que se debería marcar como seleccionado al iniciar (opcional). Util para mostrar la fecha de hoy por ejemplo.
-- alSeleccionar: Función que se ejecuta al seleccionar un botón. Recibe el dataset del botón seleccionado como argumento.
-
-Este objeto `config` se reutiliza para cualquier tipo de botón seleccionable:
-fechas, horarios, canchas, jugadores, etc.
-
-Ejemplo de uso:
-
-const config = {
-  contenedorID: "canchas-disponibles",
-  claseBoton: "btn-cancha",
-  inputID: "cancha-seleccionada",
-  datasetKey: "valor",
-  items: canchas,
-  getValorDataset: (opcion) => `${opcion.cancha}-${opcion.duracion}`,
-  getTexto: (opcion) => `${opcion.cancha} (${opcion.duracion} min)`,
-  getClaseExtra: (opcion) => (opcion.disponible ? "" : "no-disponible"),
-  getDatasetExtra: (opcion) => ({
-    cancha: opcion.cancha,
-    fecha: opcion.fecha,
-    hora: opcion.hora,
-    duracion: opcion.duracion,
-  }),
-};
-
-*/
-
+// Devuelve todos los botones dentro del contenedor
 const obtenerBotones = ({ contenedorID, claseBoton }) => {
   const contenedor = $id(contenedorID);
   const botones = $qsa(`.${claseBoton}`, contenedor);
   return Array.from(botones);
 };
 
+// Desmarca todos los botones seleccionados
 const desmarcarBotones = (botones) => {
   for (const boton of botones) {
     boton.classList.remove("seleccionado");
@@ -62,6 +22,7 @@ const desmarcarBotones = (botones) => {
   }
 };
 
+// Busca un botón por valor en el dataset principal
 const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
   for (const boton of botones) {
     if (boton.dataset[datasetKey] === valorBuscado) {
@@ -70,10 +31,12 @@ const encontrarBotonPorValor = (botones, datasetKey, valorBuscado) => {
   }
 };
 
+// Marca el botón seleccionado y actualiza el input oculto
 const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
   if (boton) {
     boton.classList.add("seleccionado");
     boton.setAttribute("aria-selected", "true");
+
     const input = $id(inputID);
     if (input) {
       input.value = valorSeleccionado;
@@ -85,9 +48,7 @@ const aplicarSeleccion = (boton, inputID, valorSeleccionado) => {
   }
 };
 
-/* Marca un botón como seleccionado y actualiza el valor de un input oculto.
-También desmarca los demás botones en el contenedor. 
-*/
+// Marca el botón correspondiente como seleccionado
 export const marcarBotonSeleccionado = (
   contenedorID,
   claseBoton,
@@ -95,26 +56,24 @@ export const marcarBotonSeleccionado = (
   datasetKey,
   valorSeleccionado
 ) => {
-  const botones = obtenerBotones({
-    contenedorID,
-    claseBoton,
-  });
+  const botones = obtenerBotones({ contenedorID, claseBoton });
   desmarcarBotones(botones);
+
   const botonASeleccionar = encontrarBotonPorValor(
     botones,
     datasetKey,
     valorSeleccionado
   );
+
   if (botonASeleccionar) {
     aplicarSeleccion(botonASeleccionar, inputID, valorSeleccionado);
+    botonASeleccionar.click(); // Dispara efectos secundarios como duración
   }
 };
 
 // --------------------------- Creación de botones ------------------------------------
 
-// Genera un botón HTML basado en un item y en las reglas definidas por el objeto config.
-// Aplica clases, dataset y texto dinámicamente según cada item.
-// Devuelve un botón listo para insertar en el DOM.
+// Crea un botón a partir de un ítem usando las reglas definidas en config
 const crearBotonDesdeItem = (item, config) => {
   const dataset = {
     [config.datasetKey]: config.getValorDataset(item),
@@ -123,19 +82,16 @@ const crearBotonDesdeItem = (item, config) => {
 
   const clasesExtra = config.getClaseExtra ? [config.getClaseExtra(item)] : [];
 
-  const boton = crearBotonInteractivo({
+  return crearBotonInteractivo({
     texto: config.getTexto(item),
     clase: config.claseBoton,
     dataset,
     clasesExtra,
     usarHTML: true,
   });
-
-  return boton;
 };
 
-// Asigna un evento click al botón para que dispare la lógica de selección general.
-// Esto actualiza la UI y el input oculto con el valor seleccionado.
+// Asocia el evento click al botón para que active la lógica de selección
 const asignarEventoDeSeleccion = (boton, config, valorSeleccionado) => {
   boton.addEventListener("click", () => {
     marcarBotonSeleccionado(
@@ -152,11 +108,8 @@ const asignarEventoDeSeleccion = (boton, config, valorSeleccionado) => {
   });
 };
 
-// Función principal para renderizar botones seleccionables en un contenedor específico.
-// Requiere del objeto `config` que define cómo deben ser los botones.
+// Renderiza botones interactivos en base al config
 export const renderizarBotonesSeleccionables = (config) => {
-  // Validaciones iniciales para asegurar que el contenedor y la clase de botón existen.
-  // Se utiliza un return temprano para evitar la ejecución innecesaria y posibles errores.
   if (!config.contenedorID || !config.claseBoton) return;
   if (!config.items || config.items.length === 0) return;
 
@@ -179,13 +132,24 @@ export const renderizarBotonesSeleccionables = (config) => {
       config.valorSeleccionado
     );
     if (botonASeleccionar) {
-      marcarBotonSeleccionado(
-        config.contenedorID,
-        config.claseBoton,
-        config.inputID,
-        config.datasetKey,
-        config.valorSeleccionado
-      );
+      botonASeleccionar.click(); // Ejecuta selección inicial
     }
   }
+};
+
+// Permite marcar un botón manualmente desde otra función
+export const obtenerDatosBotones = ({
+  contenedorID,
+  claseBoton,
+  inputID,
+  datasetKey,
+  valorSeleccionado,
+}) => {
+  marcarBotonSeleccionado(
+    contenedorID,
+    claseBoton,
+    inputID,
+    datasetKey,
+    valorSeleccionado
+  );
 };

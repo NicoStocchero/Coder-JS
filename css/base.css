@@ -7,8 +7,8 @@
   --color-error: #ff4e4e;
 
   /* Fondo y superficie */
-  --color-fondo: #f4f4f4;
-  --color-fondo-base: #f9f9f9;
+  --color-fondo: #f3f6fb;
+  --color-fondo-base: #fa5a2a;
   --color-tarjeta: #ffffff;
   --color-linea: #e0e0e0;
 
@@ -16,7 +16,7 @@
   --color-texto: #1a1a1a;
   --color-texto-principal: #1a1a1a;
   --color-muted: #6a6a6a;
-  --color-deshabilitado: #bdbdbd;
+  --color-deshabilitado: #333;
 
   /* Sombras */
   --sombra-suave: 0 0 0 0 transparent;
@@ -65,6 +65,12 @@ body {
   background-color: var(--color-fondo);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+section {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 /* ============================

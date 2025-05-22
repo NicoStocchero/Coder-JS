@@ -12,7 +12,7 @@ import {
   limpiarElemento,
   renderizarLista,
 } from "../../../shared/ui/index.js";
-import { mostrarJugadoresParaSeleccionar } from "../../reservas/ui/mostrarJugadores.js";
+import { mostrarJugadoresParaSeleccionar } from "../../reservas/ui/components/mostrarJugadores.js";
 import { hayElementos } from "../../../shared/helpers/listas.js";
 
 const contenedorID = "lista-jugadores";
@@ -51,7 +51,7 @@ const crearContenidoJugador = (jugador) => {
 
   const botonEditar = crearBotonInteractivo({
     clase: "boton-secundario",
-    clasesExtra: ["btn-editar-jugador"],
+    clasesExtra: ["btn-editar-jugador", "boton--chico"],
     texto: "Editar",
     dataset: { id: jugador.id },
     icono: "fa-solid fa-pen",
@@ -59,7 +59,7 @@ const crearContenidoJugador = (jugador) => {
 
   const botonEliminar = crearBotonInteractivo({
     clase: "boton-principal",
-    clasesExtra: ["btn-eliminar"],
+    clasesExtra: ["btn-eliminar", "boton--chico"],
     texto: "Eliminar",
     dataset: { id: jugador.id },
     icono: "fa-solid fa-trash",

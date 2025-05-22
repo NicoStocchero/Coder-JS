@@ -1,13 +1,8 @@
 import { filtrarHorariosDisponibles } from "./filtrarHorariosDisponibles.js";
 
-/* Devuelve los horarios del día en los que hay al menos una cancha libre, para la duración y fecha seleccionadas.
-
-Se utiliza para mostrar al usuario los horarios posibles antes de elegir cancha.
-
-Devuelve un array con:
-   - hora y fecha
-   - solo si al menos una cancha está libre para esa duración
-*/
+// Devuelve los horarios en los que hay al menos una cancha libre,
+// según la fecha y duración seleccionadas.
+// Se usa antes de elegir una cancha específica.
 
 export const obtenerHorariosConCanchaDisponible = ({
   horarios,
@@ -22,23 +17,25 @@ export const obtenerHorariosConCanchaDisponible = ({
     let disponibleEnAlgunaCancha = false;
 
     for (const cancha of canchasDisponibles) {
+      // Filtra las reservas para la cancha actual en esa fecha
       const reservasCanchas = reservasTotales.filter((reserva) => {
         return (
           reserva.cancha === cancha.nombre &&
           reserva.fecha === fechaSeleccionada
-        ); // Filtra las reservas de la cancha actual para la fecha seleccionada
+        );
       });
 
+      // Verifica si ese horario está disponible en esa cancha
       const horariosFiltrados = filtrarHorariosDisponibles({
         horarios: [horario],
         fechaSeleccionada,
         duracion: duracionSeleccionada,
         reservas: reservasCanchas,
-      }); // Filtra los horarios según la fecha seleccionada y las reservas existentes
+      });
 
       if (horariosFiltrados.length > 0) {
         disponibleEnAlgunaCancha = true;
-        break; // Si hay al menos un horario disponible, no es necesario seguir buscando
+        break; // Si al menos una cancha está libre, se guarda el horario
       }
     }
 
@@ -47,7 +44,7 @@ export const obtenerHorariosConCanchaDisponible = ({
         fecha: fechaSeleccionada,
         hora: horario.hora,
         disponible: true,
-      }); // Devuelve el horario si al menos una cancha está disponible para mostrar en la UI luego.
+      }); // Se agrega el horario a mostrar en la UI
     }
   }
 

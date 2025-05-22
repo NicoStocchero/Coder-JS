@@ -141,9 +141,7 @@ button i {
 }
 
 /* === BOTONES SELECCIONABLES === */
-.btn-horario,
-.btn-fecha,
-.btn-cancha {
+.btn-fecha {
   border: none !important;
   box-shadow: none !important;
 }
@@ -172,6 +170,7 @@ button i {
 .btn-fecha.seleccionado {
   background: var(--color-primario);
   border-color: var(--color-primario);
+  box-shadow: 0 2px 6px rgba(0, 3, 8, 0.15);
 }
 
 .btn-fecha.seleccionado .texto-dia,
@@ -226,6 +225,7 @@ button i {
   background: var(--color-primario);
   color: white;
   font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 3, 8, 0.15);
 }
 
 .btn-cancha {
@@ -233,7 +233,7 @@ button i {
   width: 100px;
   height: 64px;
   display: flex;
-  flex-direction: column; /* 🔥 necesario para vertical */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: var(--color-fondo-base);
@@ -243,8 +243,11 @@ button i {
   padding: 0.4rem;
   text-align: center;
   white-space: normal;
-  gap: 0.2rem;
+  gap: 0.3rem;
   font-family: inherit;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  text-transform: uppercase;
   border: none;
 }
 
@@ -263,6 +266,9 @@ button i {
   line-height: 1;
 }
 
+.btn-cancha.seleccionado {
+  box-shadow: 0 2px 6px rgba(0, 3, 8, 0.15);
+}
 .btn-cancha.seleccionado .texto-cancha-nombre,
 .btn-cancha.seleccionado .texto-cancha-duracion {
   color: white;
@@ -283,36 +289,25 @@ button i {
 }
 
 /* === CARDS === */
-.card {
-  background-color: var(--color-tarjeta);
-  border-radius: var(--radius-grande);
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-left: 4px solid var(--color-primario);
-  box-shadow: var(--sombra-tarjeta);
-  transition: box-shadow 0.3s ease;
-}
 .card:hover {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
 }
 
-.card-body {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
 .card-header,
-.header-jugador,
-.header-reserva {
+.header-jugador {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
+}
+.jugador-reserva {
+  margin: 0;
+  line-height: 1.2;
+  font-size: 0.95rem;
 }
 
-.nombre-jugador {
+.nombre-jugador,
+.jugador-reserva {
   font-size: 1.1rem;
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
@@ -333,10 +328,8 @@ button i {
   min-width: 220px;
 }
 
-.acciones-jugador,
-.acciones-reserva {
+.acciones-jugador {
   display: flex;
-  flex-direction: column;
   align-items: flex-end;
   gap: 0.5rem;
   min-width: 130px;
@@ -358,6 +351,10 @@ button i {
   background-color: #eee;
   color: var(--color-texto-principal);
   text-transform: uppercase;
+  max-width: 80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .badge-activo {
   background-color: color-mix(in srgb, var(--color-exito) 10%, white);
@@ -425,10 +422,119 @@ button i {
 
 /* === SLIDER === */
 .slider-reserva h2,
-.slider-reserva label {
+e .slider-reserva label {
   font-family: var(--font-seccion-titulo);
   font-weight: var(--font-weight-bold);
   font-size: 1.1rem;
   margin-bottom: 0.5rem;
   color: var(--color-texto-principal);
+}
+
+.reserva,
+.jugador {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid var(--color-linea);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  font-family: "Inter", sans-serif;
+  width: 100%;
+  max-width: 400px;
+  min-width: 270px;
+  min-height: 170px;
+  max-height: 170px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.reserva:hover,
+.jugador:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+}
+
+.card-body {
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* CABECERA */
+.cabecera-reserva {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.75rem;
+  color: #999;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 0.3rem;
+}
+
+.cabecera-fecha {
+  display: inline-flex;
+  margin-left: auto;
+  color: var(--color-exito);
+  font-weight: 600;
+}
+
+.cabecera-inferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dato-cancha,
+.dato-horario {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #999;
+}
+
+/* SEPARADOR */
+.linea-separadora {
+  height: 1px;
+  background-color: var(--color-linea);
+  opacity: 0.4;
+  margin: 0.2rem 0 0.3rem;
+}
+
+/* BOTONES */
+.acciones-reserva,
+.acciones-jugador {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.acciones-jugador button,
+.acciones-reserva button {
+  width: 120px;
+  max-width: 120px;
+  min-width: 120px;
+}
+
+.acciones-reserva .boton-principal,
+.acciones-reserva .boton-secundario,
+.acciones-jugador .boton-principal,
+.acciones-jugador .boton-secundario {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.75rem;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.boton--chico {
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  min-width: unset;
+  border-radius: 16px;
+  gap: 0.2rem;
+  line-height: 1.2;
 }
