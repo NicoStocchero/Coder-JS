@@ -12,6 +12,12 @@
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
 
+    <!-- Fuente Inter: más moderna, profesional y legible -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Estilos externos primero (iconos), luego los nuestros -->
     <link
       rel="stylesheet"
@@ -33,9 +39,10 @@
       defer
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <!-- Nuestro entrypoint, con module para poder usar imports -->
-    <script type="module" defer src="../js/main.js"></script>
+    <script type="module" src="../js/main.js"></script>
 
     <!-- Un poco de SEO básico + Open Graph por si se comparte el link -->
     <meta
@@ -43,7 +50,6 @@
       content="Sistema de reservas para clubes de pádel. Gestión simple y profesional."
     />
     <meta name="author" content="Nico Stocchero" />
-
     <meta property="og:title" content="Renace Padel Club" />
     <meta
       property="og:description"
@@ -56,63 +62,96 @@
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
 
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="../favicon.ico" />
   </head>
 
   <body>
     <header class="header-principal">
-      <div class="logo-club">
-        <i class="fa-solid fa-table-tennis-paddle-ball"></i>
-        Renace Padel Club
-      </div>
+      <div class="logo-club">SISTEMA DE GESTIÓN DE RESERVAS DE</div>
       <nav class="nav-principal">
-        <a href="jugadores.html" class="nav-item activo">Jugadores</a>
-        <a href="reservas.html" class="nav-item">Reservas</a>
+        <a href="index.html" class="nav-item activo">Inicio</a>
       </nav>
     </header>
 
-    <main>
-      <section class="formulario">
-        <h1>Formulario de Jugador</h1>
-        <form id="formulario-jugador">
-          <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" required />
-            <p id="error-nombre" class="mensaje-error"></p>
+    <main class="layout-principal contenedor-central">
+      <!-- Columna izquierda: Formularios -->
+      <div class="columna-formularios">
+        <section class="tarjeta-formulario">
+          <h2>Formulario de Jugador</h2>
+          <form id="formulario-jugador">
+            <div class="form-group">
+              <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" required />
+              <p id="error-nombre" class="mensaje-error"></p>
+            </div>
+            <div class="form-group">
+              <label for="apellido">Apellido:</label>
+              <input type="text" id="apellido" name="apellido" required />
+              <p id="error-apellido" class="mensaje-error"></p>
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" required />
+              <p id="error-email" class="mensaje-error"></p>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono:</label>
+              <input type="tel" id="telefono" name="telefono" required />
+              <p id="error-telefono" class="mensaje-error"></p>
+            </div>
+            <button type="submit" class="boton-principal">Enviar</button>
+          </form>
+        </section>
+
+        <!-- CTA para reservar una cancha -->
+        <section class="tarjeta-formulario">
+          <h2>¿Querés reservar una cancha?</h2>
+          <p>Accedé al formulario de reservas y gestioná tus turnos.</p>
+          <button id="btn-reservas" class="boton-principal">Reservar</button>
+        </section>
+      </div>
+
+      <!-- Columna derecha: Estadísticas -->
+      <section class="estadisticas">
+        <h2 class="titulo-pantalla">Estadísticas generales</h2>
+        <div class="estadisticas-grid">
+          <div class="card-estadistica">
+            <h3>Total de reservas</h3>
+            <p id="stat-total-reservas">17</p>
           </div>
-          <div class="form-group">
-            <label for="apellido">Apellido:</label>
-            <input type="text" id="apellido" name="apellido" required />
-            <p id="error-apellido" class="mensaje-error"></p>
+          <div class="card-estadistica">
+            <h3>Jugador más activo</h3>
+            <p id="stat-jugador-top">Melisa Stocchero</p>
           </div>
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required />
-            <p id="error-email" class="mensaje-error"></p>
+          <div class="card-estadistica">
+            <h3>Horario más usado</h3>
+            <p id="stat-horario-top">08:30</p>
           </div>
-          <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="tel" id="telefono" name="telefono" required />
-            <p id="error-telefono" class="mensaje-error"></p>
-          </div>
-          <button type="submit" class="boton-principal">Enviar</button>
-        </form>
+        </div>
+
+        <div class="card-chart">
+          <h3>Horarios más reservados</h3>
+          <canvas id="grafico-horarios" height="200"></canvas>
+        </div>
       </section>
 
-      <section class="reservas">
-        <h2>Reservas</h2>
-        <button id="btn-reservas" class="boton-principal">Reservar</button>
-      </section>
-
+      <!-- Slider para reservas -->
       <div id="slider-reserva" class="slider-reserva oculto">
         <section class="formulario">
           <h1 id="titulo-formulario" class="titulo-pantalla">
             Formulario de Reserva
           </h1>
+          <button
+            id="btn-cerrar-slider"
+            class="btn-cerrar-slider"
+            aria-label="Cerrar"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
           <form id="formulario-reserva">
             <!-- Contenedor visual de fechas -->
             <div class="campo">
-              <h2 for="fecha-seleccionada" class="titulo-seccion">Fecha</h2>
+              <h2 class="titulo-seccion">Fecha</h2>
               <div
                 id="fechas-disponibles"
                 class="grid-opciones opciones-fechas"
@@ -140,7 +179,7 @@
 
             <!-- Contenedor visual de horarios -->
             <div class="campo">
-              <h2 class="titulo-seccion" for="horario-seleccionado">Horario</h2>
+              <h2 class="titulo-seccion">Horario</h2>
               <div
                 id="horarios-disponibles"
                 class="grid-opciones opciones-horarios"
@@ -152,9 +191,9 @@
               />
             </div>
 
-            <!-- Contenedor visual de duración -->
+            <!-- Contenedor visual de duración y cancha -->
             <div class="campo">
-              <h2 for="cancha-seleccionada" class="titulo-seccion">Cancha</h2>
+              <h2 class="titulo-seccion">Cancha</h2>
               <div
                 id="canchas-disponibles"
                 class="grid-opciones opciones-canchas"
@@ -178,15 +217,25 @@
         </section>
       </div>
 
-      <section class="jugadores">
-        <h2>Jugadores Registrados</h2>
-        <div id="lista-jugadores" class="contenedor-jugadores"></div>
-      </section>
+      <!-- Sección inferior con jugadores y reservas -->
+      <div class="contenedor-secciones">
+        <section class="seccion-jugadores">
+          <div class="header-seccion">
+            <h2>Jugadores Registrados</h2>
+          </div>
+          <div id="lista-jugadores" class="contenedor-jugadores"></div>
+        </section>
 
-      <section class="reservas">
-        <h2>Reservas Realizadas</h2>
-        <div id="lista-reservas" class="contenedor-reservas"></div>
-      </section>
+        <section class="seccion-reservas">
+          <div class="header-seccion">
+            <h2>Reservas realizadas</h2>
+            <span id="badge-cantidad-reservas" class="badge-cantidad"
+              >0 reservas</span
+            >
+          </div>
+          <div id="lista-reservas" class="contenedor-reservas"></div>
+        </section>
+      </div>
     </main>
 
     <footer class="footer-principal">

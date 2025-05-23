@@ -6,6 +6,7 @@ export const guardarEnLocalStorage = (clave, valor) => {
   } catch (error) {
     notificarError({
       mensaje: "No se pudo guardar la información en el almacenamiento local.",
+      error,
     });
   }
 };
@@ -17,6 +18,7 @@ export const obtenerDeLocalStorage = (clave) => {
   } catch (error) {
     notificarError({
       mensaje: "No se pudo obtener la información del almacenamiento local.",
+      error,
     });
   }
 };
@@ -27,6 +29,7 @@ export const eliminarDeLocalStorage = (clave) => {
   } catch (error) {
     notificarError({
       mensaje: "No se pudo eliminar la información del almacenamiento local.",
+      error,
     });
   }
 };
