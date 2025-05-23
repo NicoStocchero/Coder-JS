@@ -18,6 +18,9 @@ import {
 } from "../../ui/components/abrirSliderReservas.js";
 import { mostrarJugadoresParaSeleccionar } from "../../ui/components/mostrarJugadores.js";
 import { mostrarReservasRegistradas } from "../../ui/components/card/mostrarReservas.js";
+import { renderizarEstadisticas } from "../../../estadisticas/mostrarEstadisticas.js";
+import { validarDatosReserva } from "../../../../shared/validators/index.js";
+import { resetearFormularioReserva } from "../resetearReserva.js";
 
 export class FormController {
   constructor() {
@@ -81,6 +84,10 @@ export class FormController {
 
     const datosReserva = this.reserva.obtenerDatos();
 
+    if (!validarDatosReserva(datosReserva)) {
+      return;
+    }
+
     if (this.modoEdicion) {
       datosReserva.id = this.idReservaEditando;
       const fueEditada = guardarRegistroEditado(
@@ -89,7 +96,6 @@ export class FormController {
         datosReserva
       );
       if (!fueEditada) {
-        console.warn("No se pudo editar la reserva");
         return;
       }
     } else {
@@ -115,6 +121,8 @@ export class FormController {
   }
 
   resetearFormulario() {
+    renderizarEstadisticas();
+    resetearFormularioReserva();
     cerrarSliderReserva();
     this.reserva = new Reserva();
     this.modoEdicion = false;

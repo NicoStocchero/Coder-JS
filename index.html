@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Título visible en la pestaña + usado por buscadores -->
-    <title>Renace Padel Club - Reservas</title>
+    <title>Sistema de Gestión de Pádel</title>
 
     <!-- Preconexión a recursos externos para acelerar carga (CDNs) -->
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
@@ -50,7 +50,7 @@
       content="Sistema de reservas para clubes de pádel. Gestión simple y profesional."
     />
     <meta name="author" content="Nico Stocchero" />
-    <meta property="og:title" content="Renace Padel Club" />
+    <meta property="og:title" content="Sistema de Gestión de Pádel" />
     <meta
       property="og:description"
       content="Gestioná turnos y reservas sin complicaciones."
@@ -67,7 +67,7 @@
 
   <body>
     <header class="header-principal">
-      <div class="logo-club">SISTEMA DE GESTIÓN DE RESERVAS DE</div>
+      <div class="logo-club">Sistema de Gestión de Reservas de Pádel</div>
       <nav class="nav-principal">
         <a href="index.html" class="nav-item activo">Inicio</a>
       </nav>
@@ -106,25 +106,28 @@
         <!-- CTA para reservar una cancha -->
         <section class="tarjeta-formulario">
           <h2>¿Querés reservar una cancha?</h2>
-          <p>Accedé al formulario de reservas y gestioná tus turnos.</p>
+          <p>
+            Completá el formulario y gestioná tus turnos de forma rápida y
+            simple.
+          </p>
           <button id="btn-reservas" class="boton-principal">Reservar</button>
         </section>
       </div>
 
       <!-- Columna derecha: Estadísticas -->
       <section class="estadisticas">
-        <h2 class="titulo-pantalla">Estadísticas generales</h2>
+        <h2 class="titulo-pantalla">Resumen de actividad</h2>
         <div class="estadisticas-grid">
           <div class="card-estadistica">
-            <h3>Total de reservas</h3>
+            <h3>Reservas totales</h3>
             <p id="stat-total-reservas">17</p>
           </div>
           <div class="card-estadistica">
-            <h3>Jugador más activo</h3>
-            <p id="stat-jugador-top">Melisa Stocchero</p>
+            <h3>Jugador con más reservas</h3>
+            <p id="stat-jugador-top">Jugador</p>
           </div>
           <div class="card-estadistica">
-            <h3>Horario más usado</h3>
+            <h3>Horario pico</h3>
             <p id="stat-horario-top">08:30</p>
           </div>
         </div>
