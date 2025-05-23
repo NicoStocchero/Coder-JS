@@ -2,7 +2,7 @@ import {
   guardarEnLocalStorage,
   obtenerDeLocalStorage,
 } from "../../../../data/storage.js";
-import { guardarRegistroEditado } from "../../../../shared/ui/index.js";
+import { $id, guardarRegistroEditado } from "../../../../shared/ui/index.js";
 import { notificarExito } from "../../../../shared/ui/index.js  ";
 import { crearIntervaloReserva } from "../../../../shared/helpers/fechas/crearIntervaloReserva.js";
 import { iniciarHorarios } from "../../init/iniciarHorarios.js";
@@ -60,7 +60,7 @@ export class FormController {
 
   actualizarDesdeFormulario() {
     const jugadores = obtenerDeLocalStorage("jugadores");
-    const selectJugador = document.getElementById("jugadores");
+    const selectJugador = $id("jugadores");
     const jugadorId = selectJugador?.value;
 
     const jugador = jugadores.find((j) => j.id === jugadorId);
@@ -69,12 +69,10 @@ export class FormController {
     this.reserva.nombreJugador = jugador
       ? `${jugador.nombre} ${jugador.apellido}`
       : null;
-    this.reserva.fecha = document.getElementById("fecha-seleccionada")?.value;
-    this.reserva.hora = document.getElementById("hora-seleccionada")?.value;
-    this.reserva.duracion = document.getElementById(
-      "duracion-seleccionada"
-    )?.value;
-    this.reserva.cancha = document.getElementById("cancha-seleccionada")?.value;
+    this.reserva.fecha = $id("fecha-seleccionada")?.value;
+    this.reserva.hora = $id("hora-seleccionada")?.value;
+    this.reserva.duracion = $id("duracion-seleccionada")?.value;
+    this.reserva.cancha = $id("cancha-seleccionada")?.value;
   }
 
   confirmar() {
@@ -85,7 +83,15 @@ export class FormController {
 
     if (this.modoEdicion) {
       datosReserva.id = this.idReservaEditando;
-      guardarRegistroEditado("reservas", this.idReservaEditando, datosReserva);
+      const fueEditada = guardarRegistroEditado(
+        "reservas",
+        this.idReservaEditando,
+        datosReserva
+      );
+      if (!fueEditada) {
+        console.warn("No se pudo editar la reserva");
+        return;
+      }
     } else {
       datosReserva.id = crypto.randomUUID();
       const reservas = obtenerDeLocalStorage("reservas") || [];

@@ -19,12 +19,6 @@ const datosCancha = {
 export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
   const contenedor = $id(datosCancha.contenedorID);
   limpiarElemento(contenedor); // Limpia las opciones anteriores
-  console.log(
-    "🧪 Valor que intenta seleccionar:",
-    formController.reserva.canchaSeleccionada
-  );
-  console.log("🧪 Todos los botones generados:");
-  opciones.forEach((op) => console.log(`${op.cancha}-${op.duracion}`));
   renderizarBotonesSeleccionables({
     items: opciones,
     ...datosCancha,

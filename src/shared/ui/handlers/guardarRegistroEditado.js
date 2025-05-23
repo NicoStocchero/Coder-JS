@@ -11,13 +11,18 @@ export const guardarRegistroEditado = (tipo, id, registroEditado) => {
   const index = registros.findIndex((item) => item.id === id);
   if (index === -1) return false; // No se encontró el registro original
 
+  // Comprueba si es un jugador el objeto a editar
+  const esJugador = "email" in registroEditado && "telefono" in registroEditado;
+
   // Verifica si hay otro registro con mismo email o teléfono
-  const repetido = registros.some(
-    (item) =>
-      item.id !== id &&
-      (item.email === registroEditado.email ||
-        item.telefono === registroEditado.telefono)
-  );
+  const repetido = esJugador
+    ? registros.some(
+        (item) =>
+          item.id !== id &&
+          (item.email === registroEditado.email ||
+            item.telefono === registroEditado.telefono)
+      )
+    : false;
 
   if (repetido) {
     notificarError({

@@ -28,21 +28,9 @@ export const renderizarOpciones = ({
     }
     elemento.appendChild(opcion);
   }
-  console.log("DEBUG renderizarOpciones:");
-  console.log("elemento:", elemento);
-  console.log("valorSeleccionado:", valorSeleccionado);
-  console.log(
-    "opciones:",
-    [...elemento.options].map((o) => o.value)
-  );
+
   if (valorSeleccionado) {
     elemento.value = valorSeleccionado;
-    console.log(
-      "Seteando valor seleccionado:",
-      valorSeleccionado,
-      "en",
-      elemento
-    );
     elemento.dispatchEvent(new Event("change"));
   }
 };

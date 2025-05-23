@@ -15,9 +15,9 @@ export const resetearEstadoEdicion = () => {
 
 // Actualiza el texto del botón según si se está editando o creando
 export const actualizarTextoBoton = () => {
-  const boton = $id("boton-confirmar-reserva");
+  const boton = $id("btn-confirmar-reserva");
   if (!boton) return;
-  if (estadoFormularioReserva.modoEdicion) {
+  if (formController?.modoEdicion) {
     boton.textContent = "Guardar cambios";
   } else {
     boton.textContent = "Confirmar reserva";
