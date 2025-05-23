@@ -1,6 +1,7 @@
 import { confirmarReserva } from "../logic/confirmarReserva.js";
 import { $id } from "../../../shared/ui/index.js";
 import { cerrarSliderReserva } from "./components/abrirSliderReservas.js";
+import { formController } from "../init/init.js";
 
 export const estadoFormularioReserva = {
   modoEdicion: false,
@@ -32,15 +33,6 @@ export const formularioNuevaReserva = () => {
 
   formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const fueConfirmada = await confirmarReserva({
-      modoEdicion: estadoFormularioReserva.modoEdicion,
-      idAnterior: estadoFormularioReserva.idReservaEditando,
-    });
-
-    if (fueConfirmada) {
-      cerrarSliderReserva(); // Oculta el formulario deslizante
-      resetearEstadoEdicion(); // Limpia el estado global
-    }
+    formController.confirmar();
   });
 };

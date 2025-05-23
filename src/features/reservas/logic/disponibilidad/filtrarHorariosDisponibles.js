@@ -11,6 +11,7 @@ export const filtrarHorariosDisponibles = ({
   fechaSeleccionada,
   duracion,
   reservas,
+  idReservaAExcluir = null,
 }) => {
   const horariosDisponibles = [];
 
@@ -30,6 +31,8 @@ export const filtrarHorariosDisponibles = ({
     let yaReservado = false;
 
     for (const reserva of reservas) {
+      if (reserva.id === idReservaAExcluir) continue; // Se excluye la reserva que se está editando
+
       const inicioExistente = dayjs(`${fechaSeleccionada} ${reserva.hora}`);
       const finExistente = dayjs(`${fechaSeleccionada} ${reserva.horaFin}`);
 

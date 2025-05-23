@@ -19,7 +19,12 @@ const datosCancha = {
 export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
   const contenedor = $id(datosCancha.contenedorID);
   limpiarElemento(contenedor); // Limpia las opciones anteriores
-
+  console.log(
+    "🧪 Valor que intenta seleccionar:",
+    formController.reserva.canchaSeleccionada
+  );
+  console.log("🧪 Todos los botones generados:");
+  opciones.forEach((op) => console.log(`${op.cancha}-${op.duracion}`));
   renderizarBotonesSeleccionables({
     items: opciones,
     ...datosCancha,
@@ -39,9 +44,10 @@ export const mostrarOpcionesDeCancha = ({ canchas: opciones }) => {
     alSeleccionar: (dataset) => {
       formController.reserva.duracion = dataset.duracion; // Actualiza la duración en el formulario
       formController.reserva.cancha = dataset.cancha; // Actualiza la cancha en el formulario
+
       formController.reserva.canchaSeleccionada = `${dataset.cancha}-${dataset.duracion}`;
 
-      setValue("cancha-seleccionada", `${dataset.cancha}-${dataset.duracion}`);
+      setValue("cancha-seleccionada", dataset.cancha);
       setValue("duracion-seleccionada", dataset.duracion);
     },
   });

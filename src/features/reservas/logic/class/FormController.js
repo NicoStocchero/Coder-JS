@@ -7,13 +7,17 @@ import { notificarExito } from "../../../../shared/ui/index.js  ";
 import { crearIntervaloReserva } from "../../../../shared/helpers/fechas/crearIntervaloReserva.js";
 import { iniciarHorarios } from "../../init/iniciarHorarios.js";
 import { cargarCanchasParaHorario } from "../disponibilidad/cargarCanchasParaHorario.js";
-import { actualizarTextoBoton } from "../../ui/formReservas.js";
+import {
+  actualizarTextoBoton,
+  estadoFormularioReserva,
+} from "../../ui/formReservas.js";
 import { Reserva } from "../class/Reserva.js";
 import {
   abrirSliderReserva,
   cerrarSliderReserva,
 } from "../../ui/components/abrirSliderReservas.js";
 import { mostrarJugadoresParaSeleccionar } from "../../ui/components/mostrarJugadores.js";
+import { mostrarReservasRegistradas } from "../../ui/components/card/mostrarReservas.js";
 
 export class FormController {
   constructor() {
@@ -24,8 +28,13 @@ export class FormController {
 
   iniciarEdicion(reservaExistente) {
     abrirSliderReserva();
+
     this.modoEdicion = true;
     this.idReservaEditando = reservaExistente.id;
+
+    estadoFormularioReserva.modoEdicion = true;
+    estadoFormularioReserva.idReservaEditando = reservaExistente.id;
+
     this.reserva.cargarDesdeObjeto(reservaExistente);
     this.renderFormulario();
   }
@@ -49,13 +58,33 @@ export class FormController {
     actualizarTextoBoton();
   }
 
+  actualizarDesdeFormulario() {
+    const jugadores = obtenerDeLocalStorage("jugadores");
+    const selectJugador = document.getElementById("jugadores");
+    const jugadorId = selectJugador?.value;
+
+    const jugador = jugadores.find((j) => j.id === jugadorId);
+
+    this.reserva.jugador = jugadorId;
+    this.reserva.nombreJugador = jugador
+      ? `${jugador.nombre} ${jugador.apellido}`
+      : null;
+    this.reserva.fecha = document.getElementById("fecha-seleccionada")?.value;
+    this.reserva.hora = document.getElementById("hora-seleccionada")?.value;
+    this.reserva.duracion = document.getElementById(
+      "duracion-seleccionada"
+    )?.value;
+    this.reserva.cancha = document.getElementById("cancha-seleccionada")?.value;
+  }
+
   confirmar() {
+    this.actualizarDesdeFormulario();
+    this.reserva.calcularHoraFin();
+
     const datosReserva = this.reserva.obtenerDatos();
-    if (validarDatosReserva(datosReserva) === false) {
-      return;
-    }
 
     if (this.modoEdicion) {
+      datosReserva.id = this.idReservaEditando;
       guardarRegistroEditado("reservas", this.idReservaEditando, datosReserva);
     } else {
       datosReserva.id = crypto.randomUUID();
@@ -64,23 +93,17 @@ export class FormController {
       guardarEnLocalStorage("reservas", reservas);
     }
 
-    const { fin } = crearIntervaloReserva({
-      fecha: datosReserva.fecha,
-      horaInicio: datosReserva.hora,
-      duracion: datosReserva.duracion,
-    });
-
-    const horaFin = fin.format("HH:mm");
-
     notificarExito({
       titulo: "Reserva Confirmada",
       html: `
-          <p><strong>Jugador:</strong> ${datosReserva.jugador}</p>
+          <p><strong>Jugador:</strong> ${datosReserva.nombre}</p>
           <p><strong>Fecha:</strong> ${datosReserva.fecha}</p>
-          <p><strong>Horario:</strong> ${datosReserva.hora} - ${horaFin}</p>
+          <p><strong>Horario:</strong> ${datosReserva.hora} - ${datosReserva.horaFin}</p>
           <p><strong>Cancha:</strong> ${datosReserva.cancha}</p>
         `,
     });
+
+    mostrarReservasRegistradas();
 
     this.resetearFormulario();
   }
